@@ -1,0 +1,8 @@
+#ignore python compiled files
+*.pyc
+
+#ignore backup folder
+backup/
+
+#ignore osx hidden files
+.DS_Store
