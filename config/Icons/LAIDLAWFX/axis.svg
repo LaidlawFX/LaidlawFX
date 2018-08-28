@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Axis" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="400px" height="400px" viewBox="0 0 400 400" enable-background="new 0 0 400 400" xml:space="preserve">
+<g id="Origin">
+	<g>
+		<radialGradient id="SVGID_1_" cx="244.668" cy="242" r="31.2269" gradientUnits="userSpaceOnUse">
+			<stop  offset="0" style="stop-color:#FFFF99"/>
+			<stop  offset="1" style="stop-color:#FFD232"/>
+		</radialGradient>
+		<circle fill-rule="evenodd" clip-rule="evenodd" fill="url(#SVGID_1_)" cx="256.5" cy="248" r="24"/>
+	</g>
+	<g>
+		<circle fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" cx="256.5" cy="248" r="24"/>
+	</g>
+</g>
+<g id="Z_x5F_Axis">
+	<g>
+		<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="177.3599" y1="276.4648" x2="181.3599" y2="285.7979">
+			<stop  offset="0" style="stop-color:#3366AA"/>
+			<stop  offset="1" style="stop-color:#1010AA"/>
+		</linearGradient>
+		<path fill-rule="evenodd" clip-rule="evenodd" fill="url(#SVGID_2_)" d="M248.25,253.5c-2.55-5.95-8.25-4.75-8.25-4.75
+			L109.5,306.5l6,11.25l128.75-57.5C244.25,260.25,249.88,257.304,248.25,253.5z"/>
+	</g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" d="M248.25,253.5c-2.55-5.95-8.25-4.75-8.25-4.75
+			L109.5,306.5l6,11.25l128.75-57.5C244.25,260.25,249.88,257.304,248.25,253.5z"/>
+	</g>
+</g>
+<g id="X_x5F_Axis">
+	<g>
+		<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="302.6006" y1="279.9502" x2="310.5271" y2="269.3815">
+			<stop  offset="0" style="stop-color:#CC1313"/>
+			<stop  offset="1" style="stop-color:#8C1313"/>
+		</linearGradient>
+		<path fill-rule="evenodd" clip-rule="evenodd" fill="url(#SVGID_3_)" d="M276.5,253.75c0,0-3.25-0.25-3.75,2s1.5,4.5,1.5,4.5
+			l67.75,31.5l3-6L276.5,253.75z"/>
+	</g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" d="M276.5,253.75c0,0-3.25-0.25-3.75,2
+			s1.5,4.5,1.5,4.5l67.75,31.5l3-6L276.5,253.75z"/>
+	</g>
+</g>
+<g id="Y_x5F_Axis">
+	<g>
+		<linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="260.8936" y1="163.7246" x2="276.8325" y2="165.0211">
+			<stop  offset="0" style="stop-color:#10ED10"/>
+			<stop  offset="1" style="stop-color:#10A210"/>
+		</linearGradient>
+		<path fill-rule="evenodd" clip-rule="evenodd" fill="url(#SVGID_4_)" d="M270.75,97.5L254,228.5c0,0,3.25,2.25,5.5,2.25
+			s4.25-1.75,4.25-1.75L281.5,98.25L270.75,97.5z"/>
+	</g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" d="M270.75,97.5L254,228.5c0,0,3.25,2.25,5.5,2.25
+			s4.25-1.75,4.25-1.75L281.5,98.25L270.75,97.5z"/>
+	</g>
+</g>
+<g id="Z_x5F_Cone">
+	<g>
+		<linearGradient id="SVGID_5_" gradientUnits="userSpaceOnUse" x1="54.1689" y1="322.0654" x2="79.5024" y2="345.3994">
+			<stop  offset="0" style="stop-color:#3366AA"/>
+			<stop  offset="1" style="stop-color:#1010AA"/>
+		</linearGradient>
+		<path fill-rule="evenodd" clip-rule="evenodd" fill="url(#SVGID_5_)" d="M114,309.5c-13.75-27-33.25-21.5-33.25-21.5L12.5,356
+			l99.75-4.5C112.25,351.5,127.75,336.5,114,309.5z"/>
+	</g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" d="M114,309.5c-13.75-27-33.25-21.5-33.25-21.5
+			L12.5,356l99.75-4.5C112.25,351.5,127.75,336.5,114,309.5z"/>
+	</g>
+</g>
+<g id="Y_x5F_Cone">
+	<g>
+		<linearGradient id="SVGID_6_" gradientUnits="userSpaceOnUse" x1="261.25" y1="61.0117" x2="312.25" y2="61.0117">
+			<stop  offset="0" style="stop-color:#10ED10"/>
+			<stop  offset="1" style="stop-color:#10A210"/>
+		</linearGradient>
+		<path fill-rule="evenodd" clip-rule="evenodd" fill="url(#SVGID_6_)" d="M285.75,20.5l-34.5,72.75c0,0,6.45,7.65,29.25,8.25
+			c19.02,0.501,21.75-7.25,21.75-7.25L285.75,20.5z"/>
+	</g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" d="M285.75,20.5l-34.5,72.75
+			c0,0,6.45,7.65,29.25,8.25c19.02,0.501,21.75-7.25,21.75-7.25L285.75,20.5z"/>
+	</g>
+</g>
+<g id="X_x5F_Cone">
+	<g>
+		<linearGradient id="SVGID_7_" gradientUnits="userSpaceOnUse" x1="356.2412" y1="304.3408" x2="372.7754" y2="295.9386">
+			<stop  offset="0" style="stop-color:#CC1313"/>
+			<stop  offset="1" style="stop-color:#8C1313"/>
+		</linearGradient>
+		<path fill-rule="evenodd" clip-rule="evenodd" fill="url(#SVGID_7_)" d="M358.5,277.25c0,0-9.532,0.268-15.5,10
+			c-6.756,11.018-2.75,18.25-2.75,18.25l53.5,7.25L358.5,277.25z"/>
+	</g>
+	<g>
+		<path fill="none" stroke="#000000" stroke-width="2" stroke-miterlimit="10" d="M358.5,277.25c0,0-9.532,0.268-15.5,10
+			c-6.756,11.018-2.75,18.25-2.75,18.25l53.5,7.25L358.5,277.25z"/>
+	</g>
+</g>
+</svg>
