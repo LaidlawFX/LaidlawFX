@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"
+	 id="svg47163" sodipodi:docname="restposition.svg" sodipodi:docbase="e:\dev_clean\src\houdini\support\icons\sop" inkscape:version="0.44.1" sodipodi:version="0.32" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://web.resource.org/cc/"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="400px" height="400px"
+	 viewBox="-176 -352 400 400" enable-background="new -176 -352 400 400" xml:space="preserve">
+<sodipodi:namedview  id="base" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:document-units="px" inkscape:current-layer="layer1" inkscape:window-width="1299" inkscape:window-height="1091" inkscape:window-x="292" inkscape:window-y="-2" showgrid="true" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:zoom="15.75" inkscape:cx="24" inkscape:cy="24" inkscape:grid-bbox="false">
+	</sodipodi:namedview>
+<linearGradient id="path17269_1_" gradientUnits="userSpaceOnUse" x1="-91.7832" y1="227.5498" x2="-141.4917" y2="338.002" gradientTransform="matrix(1.5998 -0.426 -0.426 -1.5998 359.6049 179.333)">
+	<stop  offset="0" style="stop-color:#FFA410"/>
+	<stop  offset="1" style="stop-color:#FFFFFF;stop-opacity:0"/>
+</linearGradient>
+<path id="path17269" sodipodi:nodetypes="ccczcczc" fill="url(#path17269_1_)" stroke="#000000" stroke-width="8" d="
+	M179.441-202.158C164.646-170.293,82.647-48.938,69.034-45.931c-1.561-11.647-37.51-157.164-38.964-167.854
+	c12.515-1.833,74.409,19.346,97.703-0.479c23.814-20.274-81.711-120.596-90.037-130.996l26.557,2.672
+	C71.422-334.867,194.417-234.394,179.441-202.158z"/>
+<radialGradient id="path47216_1_" cx="-74.166" cy="36.623" r="142.2436" gradientTransform="matrix(0.7412 -0.4253 -0.4274 -0.7447 42.9452 -125.0358)" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF"/>
+	<stop  offset="1" style="stop-color:#D0D0CB"/>
+</radialGradient>
+<path id="path47216" sodipodi:ry="16.317461" sodipodi:cy="24.317461" sodipodi:cx="27.428572" sodipodi:type="arc" sodipodi:rx="16.317461" fill="url(#path47216_1_)" stroke="#2E3436" stroke-width="8" stroke-linecap="round" stroke-linejoin="bevel" d="
+	M91.354-167.766c27.217,47.153,11.068,107.445-36.09,134.671C8.115-5.869-52.18-22.026-79.407-69.184
+	c-27.226-47.15-11.068-107.446,36.085-134.671C3.836-231.081,64.128-214.923,91.354-167.766z"/>
+<radialGradient id="path47238_1_" cx="-72.4478" cy="-183.5488" r="151.6608" gradientTransform="matrix(0.6487 0 0 0.6487 14.7875 14.8129)" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#434C4F"/>
+	<stop  offset="1" style="stop-color:#000000"/>
+</radialGradient>
+<path id="path47238" sodipodi:nodetypes="csccscccsccscccsccsccsccsc" fill="url(#path47238_1_)" d="M-88.633-140.032
+	c4.531,7.847,35.957-1.8,70.15-21.542c34.189-19.742,58.268-42.131,53.733-49.979c10.59,1.912,20.609,5.931,29.506,14.175
+	c5.336,9.945-23.963,39.826-66.974,64.665c-43.021,24.839-83.549,35.271-89.393,25.144c-1.81-8.434,0.525-22.22,2.821-32.471
+	 M-72.232-180.214c2.3,3.994,18.288-0.917,35.684-10.961c17.388-10.041,29.638-21.428,27.325-25.421l20.436,1.264
+	c2.074,7.442-17.61,26.21-39.492,38.844c-21.881,12.63-49.45,19.135-52.423,13.98l8.388-17.709 M-83.235-79.683
+	c15.021,5.807,61.208-7.533,95.406-27.275C46.36-126.7,89.834-169.141,85.3-176.988l13.273,27.168
+	c5.345,9.945-27.127,46.885-70.146,71.724s-92.155,32.198-98,22.072 M-46.126-35.267c13.411,5.187,56.901-1.892,87.423-19.511
+	c30.521-17.619,61.548-55.946,63.183-67.041l-0.719,25.475C99.82-86.77,87.72-62.799,49.326-40.636
+	C10.924-18.458-16.575-23.091-27.016-23.769"/>
+<radialGradient id="polygon16521_1_" cx="24.5664" cy="197.918" r="197.8885" gradientTransform="matrix(0.9918 0 0 -1.0141 0.2404 49.7078)" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#FFFFFF;stop-opacity:0"/>
+	<stop  offset="0.5" style="stop-color:#B7CEE1;stop-opacity:0"/>
+	<stop  offset="1" style="stop-color:#709EC3"/>
+</radialGradient>
+<path id="polygon16521" sodipodi:nodetypes="czzzzzz" fill="url(#polygon16521_1_)" stroke="#204A87" stroke-width="4" d="
+	M46.229,47.459c-28.333,0.595-191.692-66.28-202.1-90.218c-10.239-23.509-20.685-217.708-7.142-235.29
+	c15.306-19.87,151.518-71.902,174.403-71.415c26.214,0.558,182.356,23.876,198.25,46.588c16.141,23.025,7.525,199.881-1.775,225.306
+	C197.795-50.061,74.512,46.882,46.229,47.459z"/>
+</svg>
