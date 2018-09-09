@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shelfDocument>
+  <!-- This file contains definitions of shelves, toolbars, and tools.
+ It should not be hand-edited when it is being used by the application.
+ Note, that two definitions of the same element are not allowed in
+ a single file. -->
+
+  <tool name="LaidlawFX.tabmenu::hqfilecache::1.0" label="Filecache + HQ" icon="SOP_filecache">
+    <helpText><![CDATA[#icon: SOP/filecache
+
+= File Cache Hqueue =
+
+"""Preset for FileCache and Hqueue"""
+
+Drops a Filecache and Hqueue node together.]]></helpText>
+    <helpURL>http://www.sidefx.com/docs/houdini/nodes/sop/filecache.html</helpURL>    
+    <toolMenuContext name="network">
+      <contextOpType>Sop/LaidlawFX::filecache::1.0</contextOpType>
+      <contextNetType>SOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>LaidlawFX Presets</toolSubmenu>
+    <readOnly/>
+    <script scriptType="python"><![CDATA[import soptoolutils, roptoolutils
+# create rop node  
+node       = soptoolutils.genericTool(kwargs, "LaidlawFX::filecache::1.0",'geometry0')
+# create hq node
+rops       = node.parent().createNode('ropnet', 'ROPs')
+rops.moveToGoodPosition()
+hq         = rops.createNode('LaidlawFX::hq::1.0') 
+hq.moveToGoodPosition()
+node_path  = node.node("ROPs/geometry").path()
+hq.parm("hq_driver").set(node_path)
+rop_path    = hou.StringParmTemplate("hq_path", "hq_path", 1, default_value=([hq.path()]), naming_scheme=hou.parmNamingScheme.Base1, string_type=hou.stringParmType.NodeReference, menu_items=([]), menu_labels=([]), icon_names=([]), item_generator_script="", item_generator_script_language=hou.scriptLanguage.Python, menu_type=hou.menuType.Normal)
+node.addSpareParmTuple(rop_path)
+]]></script>
+  </tool>
+</shelfDocument>

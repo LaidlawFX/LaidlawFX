@@ -1,0 +1,856 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shelfDocument>
+  <!-- This file contains definitions of shelves, toolbars, and tools.
+ It should not be hand-edited when it is being used by the application.
+ Note, that two definitions of the same element are not allowed in
+ a single file. -->
+
+   <!--  General -->
+
+  <tool name="principledshader" label="Principled Shader" icon="VOP_principledshadercore">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Generic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("principledshader")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+
+
+  <tool name="hair" label="Hair" icon="SHELF_hair">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Character</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("hair")[0]
+material    = voptoolutils.genericTool(kwargs, "hairshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="skin" label="Skin" icon="VOP_skinshadercore">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Character</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("skin")[0]
+material    = voptoolutils.genericTool(kwargs, "skinshadercore::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+
+
+  <tool name="cloth" label="Blue Cloth" icon="$HFS/houdini/gallery/VopMaterials.gal?cloth?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Cloth</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("cloth")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="redvelvet" label="Red Velvet" icon="$HFS/houdini/gallery/VopMaterials.gal?redvelvet?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Cloth</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("redvelvet")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="softbeigeleather" label="Soft Beige Leather" icon="$HFS/houdini/gallery/VopMaterials.gal?softbeigeleather?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Cloth</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("softbeigeleather")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+ 
+
+  <tool name="glass" label="Glass" icon="$HFS/houdini/gallery/VopMaterials.gal?glass?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Glass</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("glass")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="roughglass" label="Rough Glass" icon="$HFS/houdini/gallery/VopMaterials.gal?roughglass?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Glass</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("roughglass")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="tintedglass" label="Tinted Glass" icon="$HFS/houdini/gallery/VopMaterials.gal?tintedglass?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Glass</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("tintedglass")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+
+
+  <tool name="blackrubber" label="Black Rubber" icon="$HFS/houdini/gallery/VopMaterials.gal?blackrubber?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Industrial</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("blackrubber")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="bricks" label="Bricks" icon="$HFS/houdini/gallery/VopMaterials.gal?bricks?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Industrial</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("bricks")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="concrete" label="Concrete" icon="$HFS/houdini/gallery/VopMaterials.gal?concrete?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Industrial</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("concrete")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="metalgrate" label="Metal Grate" icon="$HFS/houdini/gallery/VopMaterials.gal?metalgrate?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Industrial</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("metalgrate")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="phenolic" label="Phenolic" icon="$HFS/houdini/gallery/VopMaterials.gal?phenolic?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Industrial</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("phenolic")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="pianolacquer" label="Piano Lacquer" icon="$HFS/houdini/gallery/VopMaterials.gal?pianolacquer?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Industrial</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("pianolacquer")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="plastic" label="Plastic" icon="$HFS/houdini/gallery/VopMaterials.gal?plastic?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Industrial</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("plastic")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="whitepaint" label="White Paint" icon="$HFS/houdini/gallery/VopMaterials.gal?whitepaint?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Industrial</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("whitepaint")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="whiteporcelain" label="White Porcelain" icon="$HFS/houdini/gallery/VopMaterials.gal?whiteporcelain?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Industrial</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("whiteporcelain")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>        
+
+
+
+  <tool name="basicliquid" label="Basic Liquid" icon="$HFS/houdini/gallery/VopMaterials.gal?basicliquid?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Liquids</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("basicliquid")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="oceansurface" label="Ocean Surface" icon="$HFS/houdini/gallery/VopMaterials.gal?oceansurface?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Liquids</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("oceansurface")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="oceanvolume" label="Ocean Volume" icon="$HFS/houdini/gallery/VopMaterials.gal?oceanvolume?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Liquids</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("oceanvolume")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+
+
+  <tool name="aluminum" label="Aluminum" icon="$HFS/houdini/gallery/VopMaterials.gal?aluminum?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Metallic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("aluminum")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>        
+
+  <tool name="coatedmetalpaint" label="Coated Metal Paint" icon="$HFS/houdini/gallery/VopMaterials.gal?coatedmetalpaint?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Metallic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("coatedmetalpaint")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>        
+
+  <tool name="gold" label="Gold" icon="$HFS/houdini/gallery/VopMaterials.gal?gold?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Metallic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("gold")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>        
+
+  <tool name="goldpaint" label="Gold Paint" icon="$HFS/houdini/gallery/VopMaterials.gal?goldpaint?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Metallic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("goldpaint")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>        
+
+  <tool name="iron" label="Iron" icon="$HFS/houdini/gallery/VopMaterials.gal?iron?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Metallic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("iron")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>        
+
+  <tool name="metalpaint" label="Metal Paint" icon="$HFS/houdini/gallery/VopMaterials.gal?metalpaint?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Metallic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("metalpaint")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>        
+
+  <tool name="oxidizedsteel" label="Oxidized Steel" icon="$HFS/houdini/gallery/VopMaterials.gal?oxidizedsteel?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Metallic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("oxidizedsteel")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>        
+
+  <tool name="platinum" label="Platinum" icon="$HFS/houdini/gallery/VopMaterials.gal?platinum?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Metallic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("platinum")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>        
+
+  <tool name="silver" label="Silver" icon="$HFS/houdini/gallery/VopMaterials.gal?silver?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Metallic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("silver")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>        
+
+  <tool name="titanium" label="Titanium" icon="$HFS/houdini/gallery/VopMaterials.gal?titanium?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Metallic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("titanium")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>        
+
+
+
+  <tool name="milkchocolate" label="Milk Chocolate" icon="$HFS/houdini/gallery/VopMaterials.gal?milkchocolate?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Miscellaneous</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("milkchocolate")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>        
+
+  <tool name="wax" label="Wax" icon="$HFS/houdini/gallery/VopMaterials.gal?wax?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Miscellaneous</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("wax")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>  
+
+
+
+  <tool name="clay" label="Clay" icon="$HFS/houdini/gallery/VopMaterials.gal?clay?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Natural</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("clay")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="dirt" label="Clay" icon="$HFS/houdini/gallery/VopMaterials.gal?dirt?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Natural</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("dirt")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="marble" label="Marble" icon="$HFS/houdini/gallery/VopMaterials.gal?marble?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Natural</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("marble")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="rocks" label="Rocks" icon="$HFS/houdini/gallery/VopMaterials.gal?rocks?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Natural</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("rocks")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="terrain" label="Terrain" icon="$HFS/houdini/gallery/VopMaterials.gal?terrain?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Natural</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("terrain")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="woodchips" label="Wood Chips" icon="$HFS/houdini/gallery/VopMaterials.gal?woodchips?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Materials/Natural</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("woodchips")[0]
+material    = voptoolutils.genericTool(kwargs, "principledshader::2.0")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+
+
+  <tool name="tooncolorshader" label="Toon Color Shader" icon="$HFS/houdini/gallery/VopMaterials.gal?tooncolorshader?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Non-Photorealistic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("tooncolorshader")[0]
+material    = voptoolutils.genericTool(kwargs, "tooncolorshader")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="toonoutlineshader" label="Toon Outline Shader" icon="$HFS/houdini/gallery/VopMaterials.gal?toonoutlineshader?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Non-Photorealistic</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("toonoutlineshader")[0]
+material    = voptoolutils.genericTool(kwargs, "toonoutlineshader")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+
+
+  <tool name="basicsmoke" label="Basic Smoke" icon="$HFS/houdini/gallery/VopMaterials.gal?basicsmoke?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Volume</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("basicsmoke")[0]
+material    = voptoolutils.genericTool(kwargs, "pyroshader")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="billowysmoke" label="Billowy Smoke" icon="$HFS/houdini/gallery/VopMaterials.gal?billowysmoke?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Volume</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("billowysmoke")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="candle" label="Candle" icon="$HFS/houdini/gallery/VopMaterials.gal?candle?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Volume</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("candle")[0]
+material    = voptoolutils.genericTool(kwargs, "pyroshader")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="cloud" label="Cloud" icon="$HFS/houdini/gallery/VopMaterials.gal?cloud?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Volume</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("cloud")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="constantsmoke" label="Constant Smoke" icon="$HFS/houdini/gallery/VopMaterials.gal?constantsmoke?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Volume</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("constantsmoke")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="fireball" label="Fireball" icon="$HFS/houdini/gallery/VopMaterials.gal?fireball?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Volume</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("fireball")[0]
+material    = voptoolutils.genericTool(kwargs, "pyroshader")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="flames" label="Flames" icon="$HFS/houdini/gallery/VopMaterials.gal?flames?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Volume</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("flames")[0]
+material    = voptoolutils.genericTool(kwargs, "pyroshader")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="liquidsmoke" label="Liquid Smoke" icon="$HFS/houdini/gallery/VopMaterials.gal?liquidsmoke?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Volume</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("liquidsmoke")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="smokelessflames" label="Smokeless Flames" icon="$HFS/houdini/gallery/VopMaterials.gal?smokelessflames?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Volume</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("smokelessflames")[0]
+material    = voptoolutils.genericTool(kwargs, "pyroshader")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="uniformvolume" label="Uniform Volume" icon="$HFS/houdini/gallery/VopMaterials.gal?uniformvolume?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Volume</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("uniformvolume")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="wispysmoke" label="Wispy Smoke" icon="$HFS/houdini/gallery/VopMaterials.gal?wispysmoke?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Volume</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("wispysmoke")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+
+
+  <tool name="diffuse" label="Basic Diffuse" icon="$HFS/houdini/gallery/VopMaterials.gal?diffuse?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Utility</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("diffuse")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="constant" label="Constant" icon="$HFS/houdini/gallery/VopMaterials.gal?constant?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Utility</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("constant")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="environmentbox" label="Environment Box" icon="$HFS/houdini/gallery/VopMaterials.gal?environmentbox?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Utility</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("environmentbox")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="glow" label="Glow" icon="$HFS/houdini/gallery/VopMaterials.gal?glow?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Utility</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("glow")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="shadowmatte" label="Shadow Matte" icon="$HFS/houdini/gallery/VopMaterials.gal?shadowmatte?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Utility</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("shadowmatte")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="shownormal" label="Show Normal" icon="$HFS/houdini/gallery/VopMaterials.gal?shownormal?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Utility</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("shownormal")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="showshadingpoint" label="Show Shading Point" icon="$HFS/houdini/gallery/VopMaterials.gal?showshadingpoint?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Utility</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("showshadingpoint")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="showtangent" label="Show Tangent" icon="$HFS/houdini/gallery/VopMaterials.gal?showtangent?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Utility</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("showtangent")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="showUV" label="Show UV" icon="$HFS/houdini/gallery/VopMaterials.gal?showUV?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Utility</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("showUV")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+
+
+  <tool name="dustpuff" label="Dust Puff" icon="$HFS/houdini/gallery/VopMaterials.gal?dustpuff?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Sprite</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("dustpuff")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+  <tool name="spritefog" label="Sprite Fog" icon="$HFS/houdini/gallery/VopMaterials.gal?spritefog?Icon.pic.gz">
+    <toolMenuContext name="network">
+      <contextNetType>VOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>Shaders (Palette) / Sprite</toolSubmenu>
+    <script scriptType="python"><![CDATA[import voptoolutils
+pane        = kwargs["pane"]
+gal_entry   = hou.galleries.galleryEntries("spritefog")[0]
+material    = voptoolutils.genericTool(kwargs, "materialbuilder")
+gal_entry.applyToNode(material)
+material.setName(gal_entry.name(), True)]]></script>
+  </tool>
+
+
+ </shelfDocument>
+
+   <!--  End -->

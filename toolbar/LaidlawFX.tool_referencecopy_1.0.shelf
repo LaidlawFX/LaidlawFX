@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shelfDocument>
+  <!-- This file contains definitions of shelves, toolbars, and tools.
+ It should not be hand-edited when it is being used by the application.
+ Note, that two definitions of the same element are not allowed in
+ a single file. -->
+
+  <tool name="LaidlawFX.tool::referencecopy::1.0" label="Ref Copy" icon="SOP_metaball">
+    <helpText><![CDATA[#icon: SOP/metaball
+
+= Reference Copy =
+
+"""Create a reference copy of the specified node(s)."""
+
+Creates a reference copy of the specified node(s).  If envoked from the network editor
+any selected nodes will have references made.  If envoked from the shelf the node selected
+in the chooser will have a reference made.]]></helpText>
+    <toolMenuContext name="network">
+      <contextNetType>OBJ</contextNetType>
+      <contextNetType>SOP</contextNetType>
+      <contextNetType>POP</contextNetType>
+      <contextNetType>CHOP</contextNetType>
+      <contextNetType>ROP</contextNetType>
+      <contextNetType>SHOP</contextNetType>
+      <contextNetType>COP2</contextNetType>
+      <contextNetType>VOP</contextNetType>
+      <contextNetType>VOPNET</contextNetType>
+      <contextNetType>DOP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>LaidlawFX</toolSubmenu>
+    <script scriptType="python"><![CDATA[#
+
+import toolutils
+
+import parmutils
+
+# Get the pane the tool was invoked from.
+pane = kwargs["pane"]
+
+# If it is a Network Editor then the list of nodes to copy is all the
+# selected nodes.
+if isinstance(pane, hou.NetworkEditor):
+    nodes_to_copy = hou.selectedNodes()
+
+# If it isn't a Network Editor we need to choose a node.
+else:
+    # Get the active pane to get the current working directory.
+    activepane = toolutils.activePane(kwargs)
+    # The initial chooser node is the current working directory.
+    init_node = activepane.pwd()
+
+    # Select a node to make a copy of.
+    node_path = hou.ui.selectNode(None, init_node)
+    # Attempt to get the node we selected.  This will result in None if we
+    # choose Clear or Cancel.
+    source_node = hou.node(node_path)
+
+    # Convert the node to a tuple.
+    if source_node is not None:
+        nodes_to_copy = (source_node,)
+    # Use an empty tuple.
+    else:
+        nodes_to_copy = ()
+
+# Copy the node(s).
+for source_node in nodes_to_copy:
+    # Get the node type name so we know what to create.
+    node_type_name = source_node.type().name()
+    # Create a node of the same name at the same level.
+    ref_copy = source_node.parent().createNode(node_type_name)
+    # Link the parms from the copy node to the source node.
+    parmutils.linkParmsTo(ref_copy, source_node)
+
+    # Move the copied node to a good position.
+    ref_copy.moveToGoodPosition()
+    # Set a comment where the node is referened from.
+    ref_copy.setComment("Referenced from %s" % source_node.name())]]></script>
+  </tool>
+</shelfDocument>

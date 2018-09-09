@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shelfDocument>
+  <!-- This file contains definitions of shelves, toolbars, and tools.
+ It should not be hand-edited when it is being used by the application.
+ Note, that two definitions of the same element are not allowed in
+ a single file. -->
+
+  <toolshelf name="LaidlawFX.tab::hq::1.0" label="LaidlawFX HQ">
+    <memberTool name="LaidlawFX.tabmenu::hqifd::1.0"/>
+    <memberTool name="LaidlawFX.tabmenu::hqgeometry::1.0"/>
+    <memberTool name="LaidlawFX.tabmenu::hqdop::1.0"/>
+    <memberTool name="LaidlawFX.tabmenu::hqopengl::1.0"/>
+    <memberTool name="LaidlawFX.tabmenu::hqdop::1.0"/>
+    <memberTool name="LaidlawFX.tabmenu::hqcomp::1.0"/>    
+    <memberTool name="LaidlawFX.tabmenu::hqfilecache::1.0"/>     
+  </toolshelf>
+</shelfDocument>

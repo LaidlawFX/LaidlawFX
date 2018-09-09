@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shelfDocument>
+  <!-- This file contains definitions of shelves, toolbars, and tools.
+ It should not be hand-edited when it is being used by the application.
+ Note, that two definitions of the same element are not allowed in
+ a single file. -->
+
+  <tool name="LaidlawFX.tabmenu::hqcomp::1.0" label="Composite + HQ" icon="ROP_comp">
+    <helpText><![CDATA[#icon: ROP/comp
+
+= Composite Hqueue =
+
+"""Preset for Composite and Hqueue"""
+
+Drops a Composite and Hqueue node together.]]></helpText>
+    <helpURL>http://www.sidefx.com/docs/houdini/nodes/out/comp.html</helpURL>    
+    <toolMenuContext name="network">
+      <contextOpType>Driver/LaidlawFX::comp::1.0</contextOpType>
+      <contextNetType>ROP</contextNetType>
+    </toolMenuContext>
+    <toolSubmenu>LaidlawFX Presets</toolSubmenu>
+    <readOnly/>
+    <script scriptType="python"><![CDATA[import drivertoolutils
+# create rop node  
+node       = drivertoolutils.genericTool(kwargs, "LaidlawFX::comp::1.0")
+# create hq node
+hq         = node.parent().createNode('LaidlawFX::hq::1.0')
+# Wire hq to node
+hq.setFirstInput(node,0)
+hq.moveToGoodPosition() 
+]]></script>
+  </tool>
+</shelfDocument>
