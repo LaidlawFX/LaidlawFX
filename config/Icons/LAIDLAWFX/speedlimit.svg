@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"
+	 id="Layer_1" inkscape:output_extension="org.inkscape.output.svg.inkscape" xmlns:svg="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://web.resource.org/cc/" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" sodipodi:docbase="/home/joe/dev/src/houdini/support/icons/pop" inkscape:version="0.44.1" sodipodi:docname="speedlimit.svg" sodipodi:version="0.32"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="400px" height="400px"
+	 viewBox="-176 -352 400 400" enable-background="new -176 -352 400 400" xml:space="preserve">
+<sodipodi:namedview  fill="#c4a000" stroke="#fce94f" inkscape:window-height="540" inkscape:window-width="756" inkscape:pageshadow="2" id="base" bordercolor="#666666" borderopacity="1.0" inkscape:cy="18.589154" inkscape:cx="24.064878" inkscape:zoom="4.7668335" pagecolor="#ffffff" inkscape:document-units="px" inkscape:current-layer="layer1" inkscape:window-y="120" inkscape:window-x="296" inkscape:pageopacity="0.0">
+	</sodipodi:namedview>
+<g id="layer1" inkscape:label="Layer 1" inkscape:groupmode="layer">
+	<path id="path15708" stroke="#000000" stroke-width="16.9054" d="M25.157-62.752h160.688c3.271,0,6.062-1.8,7.496-4.523
+		c12.795-25.383,20.001-54.093,20.001-84.486c0-103.926-84.271-188.18-188.192-188.18c-103.938,0-188.197,84.254-188.197,188.18
+		c0,30.393,7.206,59.103,19.992,84.486c1.42,2.715,4.24,4.523,7.5,4.523H25.157z"/>
+	<path id="path15710" opacity="0.6" enable-background="new    " d="M25.149-70.668h151.509c3.096,0,5.721-1.701,7.074-4.243
+		c12.069-23.947,18.853-51.013,18.853-79.673c0-97.991-79.457-177.433-177.448-177.433c-97.99,0-177.445,79.442-177.445,177.433
+		c0,28.66,6.777,55.727,18.846,79.673c1.357,2.559,3.999,4.243,7.071,4.243H25.149z"/>
+	<path id="path15717" fill="#4E4ED1" d="M27.497-71.7l168.964-129.225C174.009-287.223,92.718-332.017,25.149-332.017
+		c-67.556,0-126.308,37.752-156.28,93.327L27.497-71.7z"/>
+	<line id="line15719" fill="#00005A" stroke="#00005A" stroke-width="8.4527" x1="-131.131" y1="-238.69" x2="27.497" y2="-71.7"/>
+	<line id="line15721" fill="#00005A" stroke="#00005A" stroke-width="8.4527" x1="196.461" y1="-200.925" x2="27.497" y2="-71.7"/>
+	<line id="line15725" fill="none" stroke="#CFEB87" stroke-width="8.4527" x1="187.033" y1="-108.624" x2="161.569" y2="-115.424"/>
+	<line id="line15727" fill="none" stroke="#CFEB87" stroke-width="8.4527" x1="186.96" y1="-195.329" x2="162.32" y2="-188.742"/>
+	<line id="line15729" fill="none" stroke="#CFEB87" stroke-width="8.4527" x1="143.532" y1="-270.367" x2="126.042" y2="-252.872"/>
+	<line id="line15731" fill="none" stroke="#CFEB87" stroke-width="8.4527" x1="68.473" y1="-313.696" x2="62.184" y2="-290.216"/>
+	<line id="line15733" fill="none" stroke="#CFEB87" stroke-width="8.4527" x1="-18.179" y1="-313.688" x2="-11.885" y2="-290.216"/>
+	<line id="line15735" fill="none" stroke="#CFEB87" stroke-width="8.4527" x1="-93.214" y1="-270.359" x2="-75.718" y2="-252.851"/>
+	
+		<line id="line15737" fill="none" stroke="#CFEB87" stroke-width="8.4527" x1="-136.649" y1="-195.329" x2="-112.03" y2="-188.742"/>
+	
+		<line id="line15739" fill="none" stroke="#CFEB87" stroke-width="8.4527" x1="-136.724" y1="-108.624" x2="-111.262" y2="-115.424"/>
+	
+		<radialGradient id="path15758_1_" cx="-403.9209" cy="-15.7202" r="167.4331" gradientTransform="matrix(-1.1214 1.000000e-004 0 0.9092 -427.806 -317.6804)" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#F5F4F4;stop-opacity:0.6907"/>
+		<stop  offset="1" style="stop-color:#FFFFFF;stop-opacity:0"/>
+	</radialGradient>
+	<path id="path15758" fill="url(#path15758_1_)" d="M150.599-255.901c0,42.033-56.164,76.107-125.441,76.107
+		c-69.289,0-125.454-34.075-125.454-76.107s66.438-76.116,125.454-76.116C85.107-332.017,150.599-297.934,150.599-255.901z"/>
+	<line id="line15776" fill="none" x1="-110.082" y1="3.301" x2="165.737" y2="3.301"/>
+	<path id="XMLID_61_" d="M-135.869-42.462h21v7.082h-11.887v76.273h11.887v7.083h-21V-42.462"/>
+	<g id="g17895" transform="matrix(1.213859,0,0,1.213859,-8.208321,-1.425938)">
+		<polyline id="polyline15778" points="-70.923,24.806 -91.841,3.894 -70.923,-17.023 		"/>
+		<polyline id="polyline15780" points="130.297,24.806 151.215,3.894 130.297,-17.023 		"/>
+		<rect id="rect17891" x="-77.506" y="-3.028" width="210.048" height="14.015"/>
+	</g>
+	<path id="path17893" fill="#020202" stroke="#000000" stroke-miterlimit="10" d="M191.194-42.438h-20.999v7.083h11.886v76.272
+		h-11.886V48h20.999V-42.438"/>
+	<polygon id="polygon15687" fill="#FFFFFF" stroke="#F7CC80" stroke-width="8.4527" points="131.729,-224.005 31.849,-71.643 
+		22.698,-78.048 	"/>
+</g>
+</svg>

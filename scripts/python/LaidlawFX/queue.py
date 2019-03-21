@@ -40,9 +40,9 @@ def execute(kwargs):
 #    Desc: Execute button based on multiparm list.
 # -----------------------------------------------------------------------------
     
-def multiparm_execute(kwargs,ropque):
-
-    i = str(re.findall('\d+', ropque)[0])
+def multiparm_execute(kwargs):
+    parm        = kwargs['parm'].name()
+    i = str(re.findall('\d+', parm)[0])
     try:
         render(kwargs, i)  
     except:
@@ -117,29 +117,32 @@ def render(kwargs, i):
 # -----------------------------------------------------------------------------
 
 def dropdown_menu(kwargs, roptype):
-    node        = kwargs['node']
-    ropque      = kwargs['parm'].name()
+    try:     
+        node        = kwargs['node']
+        ropque      = kwargs['parm'].name()
 
-    button      = []
-    que         = str(re.findall('\d+', ropque)[0])
-    roppath     = node.evalParm(roptype+que)
-    ropnode     = hou.node(roppath)
-    ropparm     = hou.parm(roppath)
+        button      = []
+        que         = str(re.findall('\d+', ropque)[0])
+        roppath     = node.evalParm(roptype+que)
+        ropnode     = hou.node(roppath)
+        ropparm     = hou.parm(roppath)
 
-    if ropnode != None :
-        buttonList = [p for p in ropnode.parms() if p.parmTemplate().type() == hou.parmTemplateType.Button]
-        #toggles = [p for p in node.parms() if isinstance(p.parmTemplate(), hou.ButtonParmTemplate)]
-        for parm in buttonList:
-            if str(parm.name()) != 'renderdialog' :
-                button.extend([str(parm.name()),str(parm.description())])        
-    elif ropparm != None:       
-        button  = [str(ropparm.name()), str(ropparm.description()) ]
-    else:
-        if roptype == 'rop' :
-            button = ['execute','Render','reload', 'Reload', 'renderpreview', 'Render To Mplay', 'executebackground', 'Render in Background']
-        else :
-            button = ['execute', 'Please assign rop']
+        if ropnode != None :
+            buttonList = [p for p in ropnode.parms() if p.parmTemplate().type() == hou.parmTemplateType.Button]
+            #toggles = [p for p in node.parms() if isinstance(p.parmTemplate(), hou.ButtonParmTemplate)]
+            for parm in buttonList:
+                if str(parm.name()) != 'renderdialog' :
+                    button.extend([str(parm.name()),str(parm.description())])        
+        elif ropparm != None:       
+            button  = [str(ropparm.name()), str(ropparm.description()) ]
+        else:
+            if roptype == 'rop' :
+                button = ['execute','Render','reload', 'Reload', 'renderpreview', 'Render To Mplay', 'executebackground', 'Render in Background']
+            else :
+                button = ['execute', 'Please assign rop']
 
-    return button
+        return button
+    except :
+        return ['execute', 'Please assign rop']       
 
     
