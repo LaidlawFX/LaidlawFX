@@ -149,7 +149,7 @@ def unity(node,method):
         node.parm('path_shader').deleteAllKeyframes()
         node.parm('path_shader').set('`chs("_project")`/shaders/vertex_rigid.shader')         
     elif method == 2 :
-        node.hm().primcount.check(node)
+        vat_utils.primcount(node)
         node.parm('path_shader').deleteAllKeyframes()
         node.parm('path_shader').set('`chs("_project")`/shaders/vertex_fluid.shader')
         node.parm('target_texture_size').deleteAllKeyframes()
