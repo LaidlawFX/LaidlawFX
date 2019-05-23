@@ -18,7 +18,6 @@ in the chooser will have a reference made.]]></helpText>
     <toolMenuContext name="network">
       <contextNetType>OBJ</contextNetType>
       <contextNetType>SOP</contextNetType>
-      <contextNetType>POP</contextNetType>
       <contextNetType>CHOP</contextNetType>
       <contextNetType>ROP</contextNetType>
       <contextNetType>SHOP</contextNetType>
