@@ -109,32 +109,34 @@ def primcount(node):
 # -----------------------------------------------------------------------------
 
 def _depth(node):
+    #print node.path()
     depth       = node.evalParm('depth')
     usebwpoints = node.evalParm('usebwpoints')
+    
     ntype = 7
     stype = 'float32'
-    if (depth == 0 or depth == 'int8') and usebwpoints == 0 :
+    if (depth == 0 ) and usebwpoints == 0 : #or depth == 'int8'
         ntype = 0
         stype = 'int8'
-    if (depth == 0 or depth == 'int8') and usebwpoints == 1 : 
+    if (depth == 0 ) and usebwpoints == 1 : #or depth == 'int8'
         ntype = 1
         stype = 'int8bw'
-    if (depth == 1 or depth == 'int16')and usebwpoints == 0 :        
+    if (depth == 1 ) and usebwpoints == 0 : #or depth == 'int16'        
         ntype = 2
         stype = 'int16'
-    if (depth == 1 or depth == 'int16') and usebwpoints == 1 :        
+    if (depth == 1 ) and usebwpoints == 1 : #or depth == 'int16'
         ntype = 3
         stype = 'int16bw'
-    if (depth == 2 or depth == 'int32') and usebwpoints == 0 :        
+    if (depth == 2 ) and usebwpoints == 0 : #or depth == 'int32'     
         ntype = 4
         stype = 'int32'
-    if (depth == 2 or depth == 'int32') and usebwpoints == 1 :        
+    if (depth == 2 ) and usebwpoints == 1 : #or depth == 'int32'      
         ntype = 5
         stype = 'int32bw'
-    if (depth == 3 or depth == 'float16'):        
+    if (depth == 3 ): #or depth == 'float16'       
         ntype = 6
         stype = 'float16'
-    if (depth == 4 or depth == 'float32'):        
+    if (depth == 4 ): #or depth == 'float32'       
         ntype = 7
         stype = 'float32'
     
