@@ -35,6 +35,22 @@ def dir_check(path):
     if not os.path.exists(path):
         os.makedirs(path)
     return path
+
+# -----------------------------------------------------------------------------
+#    Name: file_delete(path)
+#  Raises: N/A
+# Returns: None
+#    Desc: Hqueue Rop - project path.  
+# -----------------------------------------------------------------------------
+
+def file_delete(path):
+    #remove file if it exist
+    try:
+        if os.path.isfile(path) :
+            os.remove(path)
+    except OSError:
+        pass    
+
 # -----------------------------------------------------------------------------
 #    Name: path_create(dirlist,filelist=None)
 #  Raises: N/A

@@ -1,0 +1,46 @@
+// This file allows you to exclude or hide OPs or change their labels.
+// The complete list of table names are Object, Sop, Particle, Pop,
+// Chopnet, Chop, Driver, Shop, Cop2, CopNet, Vop, and VopNet.
+//
+// Examples:
+//
+// The following line excludes the geo and light objects. Operators that
+// are excluded do not exist as far as Houdini is concerned. They cannot be
+// created by any means, and cause errors when loading a hip file with that
+// operator type:
+// opexclude Object geo light
+//
+// The following line renames the Merge Sop to "Combine Inputs". This affects
+// only the English description of the operator that appears in toolbars, not
+// the internal name of the operator:
+// oprename Sop merge "Combine Inputs"
+//
+// The following line aliases an object called "thing" to be a geo object.
+// This is an alias of the internal operator name, and affects the opadd
+// command and loading existing hip files. So loading a hip file with an
+// operator type "thing" will create a "geo" object in its place:
+// opalias Object geo thing
+//
+// The following command deprecates the given operator type with supplied
+// reason and hides it from toolbars. Deprecation warnings will show up when
+// the user loads the scene so that they can be made aware which ops they
+// should no longer be using and which they have been replaced with (if any).
+// opdeprecate -r "Use Voronoi tools instead" 11.0 Sop shatter
+//
+// The following line hides the generic shadow SHOP from the toolbars,
+// but this SHOP can still be created using the opadd command, or loading
+// in a hip file with this SHOP:
+// ophide Shop gen_shadow
+
+// In order to change the initial name of the op to something
+// other than the internal name, the opfirstname command can
+// be used.
+
+ophide Driver   LaidlawFX::vertex_animation_textures_channel_comp::1.0
+ophide Cop2     LaidlawFX::vertex_animation_textures_channel_out::1.0
+ophide Cop2     LaidlawFX::vertex_animation_textures_getattrib::1.0
+ophide Cop2     LaidlawFX::vector_normalize::1.0
+ophide Vop      LaidlawFX::vertical_point_index::1.0
+ophide Vop      LaidlawFX::vertical_point_index::2.0
+ophide Vop      LaidlawFX::coord_swizzle_vector::1.0
+ophide Vop      LaidlawFX::coord_swizzle_quaternion::1.0
