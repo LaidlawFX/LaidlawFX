@@ -58,9 +58,9 @@ def preset(node,method):
         node.parm('path_shader').deleteAllKeyframes()
         node.parm('path_shader').set('`chs("_project")`/shaders/vertex_fluid.shader')
         utils.primcount(node)
-        if node.parm('enable_polyreduce') :     
-	        node.parm('target_texture_size').deleteAllKeyframes()
-	        node.parm('target_texture_size').setExpression('ch("target_polycount")*3')
+        #if node.parm('enable_polyreduce') :     
+	    #    node.parm('target_texture_size').deleteAllKeyframes()
+	     #   node.parm('target_texture_size').setExpression('ch("target_polycount")*3')
     elif method == 3 : 
         node.parm('path_shader').deleteAllKeyframes()
         node.parm('path_shader').set('`chs("_project")`/shaders/vertex_sprite.shader')

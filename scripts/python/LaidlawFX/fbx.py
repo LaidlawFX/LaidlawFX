@@ -30,8 +30,8 @@ def execute(node):
             print(' ')
             print('Begin Time of Obj Creation : ' + str(begTime))
                
-        exportNode             = hou.node('objectHierarchy')
-        nodeOut                = hou.node('objects/OUT')         
+        exportNode             = node.node('objectHierarchy')
+        nodeOut                = node.node('objects/OUT')         
 
         for child in exportNode.children():
             child.destroy()

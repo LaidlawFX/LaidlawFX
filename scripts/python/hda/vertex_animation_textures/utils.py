@@ -4,6 +4,7 @@
 
 import hou
 import os
+import math
 import json
 import imp
 import pkgutil
@@ -86,6 +87,7 @@ def _project(node):
     else :
         project       = hou.hscriptExpression('$JOB')  
     
+    os.path.normpath(project)
     return project
 
 # -----------------------------------------------------------------------------
@@ -96,7 +98,8 @@ def _project(node):
 # -----------------------------------------------------------------------------
 
 def primcount(node):
-    polyNode    = hou.node("objects/data/TO_Mesh")
+    polyNode    = node.node("objects/data/IN")
+    print polyNode.path()
     geo         = polyNode.geometry()
     count       = geo.countPrimType('Poly')
 
@@ -292,7 +295,7 @@ def preset(node):
     
     reset(node)
 
-    module = 'hda.vertex_animation_texture.engines.'
+    module = 'hda.vertex_animation_textures.engines.'
     module += engine
     module += '.preset'
     preset_loader = pkgutil.find_loader(module)
@@ -459,39 +462,11 @@ def mat_update(node):
 #    Desc: Performs the presets for each engine.
 # -----------------------------------------------------------------------------
 
-# Has multiple node outputs need to rework this logic
-def path_cop_bc_uv(node):
-    bc = node.evalParm('bcChannelSplit')
-    if bc == 0 :
-        path = "../../textures/UV/XYZW"
-    elif bc == 1 :
-        path = "../../textures/UV/XYZW"
-        path = "../../textures/UV/W"
-    elif bc == 2 :
-        path = "../../textures/UV/XYZW"
-        path = "../../textures/UV/W"        
-    elif bc == 3 :
-        path = "../../textures/UV/XY"
-        path = "../../textures/UV/ZW" 
-    elif bc == 4 :
-        path = "../../textures/UV/X"
-        path = "../../textures/UV/Y"
-        path = "../../textures/UV/Z"
-        path = "../../textures/UV/W"                       
-    return path      
-
-# -----------------------------------------------------------------------------
-#    Name: path_cop_bc_uv(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Performs the presets for each engine.
-# -----------------------------------------------------------------------------
-
 def channel_comp(node):
     name        = node.name()
     parent      = node.parent().name()
     try :
-        coppath     = hou.node("../../textures/"+parent+"/"+name).path()
+        coppath     = node.node("../../textures/"+parent+"/"+name).path()
     except :
         coppath     = "refresh node"
 
@@ -499,10 +474,71 @@ def channel_comp(node):
     os.path.normpath(path)
     filename, file_extension = os.path.splitext(path)
     filelist    =[filename, '_', name, file_extension]    
-    path        =''.join(filelist)  
-    copoutput   = filename + name + file_extension
+    copoutput   =''.join(filelist) 
+    os.path.normpath(copoutput).replace('//', '/') 
                        
     return coppath, copoutput
+
+# # -----------------------------------------------------------------------------
+# #    Name: _pscale(node)
+# #  Raises: N/A
+# # Returns: None
+# #    Desc: Sets value
+# # -----------------------------------------------------------------------------
+
+# def minmax_pscale(node):
+#     try:
+#         #Brightest pixel represents the max bounds for scale.
+#         scale_max = node.node("textures/normalize_pscale/max").getPixelByUV(plane="C",u=0,v=0, component="r")
+#         #Darkest pixel represents the min bounds for position.
+#         scale_min = node.node("textures/normalize_pscale/min").getPixelByUV(plane="C",u=0,v=0, component="r")
+
+#         node.parm("max_min_scale1").set(str(float(int(scale_max[0]*100000))/100000))
+#         node.parm("max_min_scale2").set(str(float(int(scale_min[0]*100000))/100000))
+#     except :
+#         return    
+
+# # -----------------------------------------------------------------------------
+# #    Name: _scale(node)
+# #  Raises: N/A
+# # Returns: None
+# #    Desc: Sets value
+# # -----------------------------------------------------------------------------
+
+# def minmax_scale(node):
+#     try:
+#         #Brightest pixel represents the max bounds for scale.
+#         scale_max = node.node("textures/normalize_scale/max").getPixelByUV(plane="C",u=0,v=0, component="r")
+#         #Darkest pixel represents the min bounds for position.
+#         scale_min = node.node("textures/normalize_scale/min").getPixelByUV(plane="C",u=0,v=0, component="r")
+
+
+#         node.parm("max_min_scale1").set(str(float(int(scale_max[0]*100000))/100000))
+#         node.parm("max_min_scale2").set(str(float(int(scale_min[0]*100000))/100000))
+#     except :
+#         return  
+
+
+# -----------------------------------------------------------------------------
+#    Name: minmax_pos(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Sets value
+# -----------------------------------------------------------------------------
+
+def minmax_pos(node):
+    node_bounds    = node.node("objects/data/OUT_max_min")
+    geo     = node_bounds.geometry()
+
+    #Represents the max bounds for pivot via the pivot.
+    bbx_max = geo.attribValue("bbx_max")
+
+    #Represents the min bounds for pivot via the pivot.
+    bbx_min  = geo.attribValue("bbx_min")
+
+    node.parm("max_min_pos1").set(str(float(int(bbx_max*100000))/100000))    
+    node.parm("max_min_pos2").set(str(float(int(bbx_min*100000))/100000))
+    return bbx_max, bbx_min
 
 # -----------------------------------------------------------------------------
 #    Name: _pscale(node)
@@ -512,16 +548,18 @@ def channel_comp(node):
 # -----------------------------------------------------------------------------
 
 def minmax_pscale(node):
-    try:
-        #Brightest pixel represents the max bounds for scale.
-        scale_max = hou.node("../textures/normalize_pscale/max").getPixelByUV(plane="C",u=0,v=0, component="r")
-        #Darkest pixel represents the min bounds for position.
-        scale_min = hou.node("../textures/normalize_pscale/min").getPixelByUV(plane="C",u=0,v=0, component="r")
+    node_bounds    = node.node("objects/data/OUT_max_min")
+    geo     = node_bounds.geometry()
 
-        node.parm("max_min_scale1").set(str(float(int(scale_max[0]*100000))/100000))
-        node.parm("max_min_scale2").set(str(float(int(scale_min[0]*100000))/100000))
-    except :
-        return    
+    #Represents the max bounds for pivot via the pivot.
+    pscale_max = geo.attribValue("pscale_max")
+
+    #Represents the min bounds for pivot via the pivot.
+    pscale_min  = geo.attribValue("pscale_min")
+
+    node.parm("max_min_scale1").set(str(float(int(pscale_max[0]*100000))/100000))
+    node.parm("max_min_scale2").set(str(float(int(pscale_min[0]*100000))/100000))
+    return pscale_max, pscale_min   
 
 # -----------------------------------------------------------------------------
 #    Name: _scale(node)
@@ -531,83 +569,18 @@ def minmax_pscale(node):
 # -----------------------------------------------------------------------------
 
 def minmax_scale(node):
-    try:
-        #Brightest pixel represents the max bounds for scale.
-        scale_max = hou.node("../textures/normalize_scale/max").getPixelByUV(plane="C",u=0,v=0, component="r")
-        #Darkest pixel represents the min bounds for position.
-        scale_min = hou.node("../textures/normalize_scale/min").getPixelByUV(plane="C",u=0,v=0, component="r")
+    node_bounds    = node.node("objects/data/OUT_max_min")
+    geo     = node_bounds.geometry()
 
+    #Represents the max bounds for pivot via the pivot.
+    scale_max = geo.attribValue("scale_max")
 
-        node.parm("max_min_scale1").set(str(float(int(scale_max[0]*100000))/100000))
-        node.parm("max_min_scale2").set(str(float(int(scale_min[0]*100000))/100000))
-    except :
-        return  
+    #Represents the min bounds for pivot via the pivot.
+    scale_min  = geo.attribValue("scale_min")
 
-
-
-# -----------------------------------------------------------------------------
-#    Name: _pscale(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Sets value
-# -----------------------------------------------------------------------------
-
-def minmax_pos_single(node):
-    try:
-        #Unity engine conversion
-        engine  = node.evalParm('engine')
-        scale   = 1/node.evalParm('scale')
-
-        node_bounds    = hou.node("../objects/data/OUT_min_max_bounds")
-        geo     = node_bounds.geometry()
-
-        bbox    = geo.boundingBox()
-
-        min_vec = bbox.minvec()
-        min_pos = min(min_vec)
-
-        max_vec = bbox.maxvec()
-        max_pos = max(max_vec)
-
-        if engine == 'unity' :
-            node.parm("max_min_pos1").set(str(float(int(max_pos*100000))/100000*scale))
-            node.parm("max_min_pos2").set(str(float(int(min_pos*100000))/100000*scale))
-        else:
-            node.parm("max_min_pos1").set(str(float(int(max_pos*100000))/100000))    
-            node.parm("max_min_pos2").set(str(float(int(min_pos*100000))/100000))
-    except :
-        return 
-
-
-# -----------------------------------------------------------------------------
-#    Name: _pscale(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Sets value
-# -----------------------------------------------------------------------------
-
-def minmax_pos_multi(node):
-    try:
-        #Unity engine conversion
-        engine  = node.evalParm('engine')
-        scale   = 1/node.evalParm('scale')
-
-        #Brightest pixel represents the max bounds for position.
-        position_max = hou.node("../textures/normalize_position/max").getPixelByUV(plane="C",u=0,v=0, component="r")
-        #print position_max
-        #Darkest pixel represents the min bounds for position.
-        position_min = hou.node("../textures/normalize_position/min").getPixelByUV(plane="C",u=0,v=0, component="r")
-        #print position_min
-
-        if engine == 'unity' :
-            node.parm("max_min_pos1").set(str(float(int(position_max[0]*100000))/100000*scale))
-            node.parm("max_min_pos2").set(str(float(int(position_min[0]*100000))/100000*scale))
-        else:
-            node.parm("max_min_pos1").set(str(float(int(position_max[0]*100000))/100000))    
-            node.parm("max_min_pos2").set(str(float(int(position_min[0]*100000))/100000))
-    except :
-        return 
-
+    node.parm("max_min_scale1").set(str(float(int(scale_max[0]*100000))/100000))
+    node.parm("max_min_scale2").set(str(float(int(scale_min[0]*100000))/100000))
+    return scale_max, scale_min   
 
 # -----------------------------------------------------------------------------
 #    Name: _pscale(node)
@@ -617,30 +590,115 @@ def minmax_pos_multi(node):
 # -----------------------------------------------------------------------------
 
 def minmax_pivot(node):
-    try:
-        #Unity engine conversion
-        engine  = node.evalParm('engine')
-        scale   = 1/node.evalParm('scale')
+    node_bounds    = node.node("objects/data/OUT_max_min")
+    geo     = node_bounds.geometry()
 
-        #Pivot geo
-        node_bounds = hou.node("../objects/data/OUT_min_max_bounds")
-        geo  = node_bounds.geometry()
+    #Represents the max bounds for pivot via the pivot.
+    pivot_max = geo.attribValue("pivot_max")
 
-        #Represents the max bounds for pivot via the pivot.
-        pivot_max = geo.attribValue("pivot_max")
+    #Represents the min bounds for pivot via the pivot.
+    pivot_min  = geo.attribValue("pivot_min")
 
-        #Represents the min bounds for pivot via the pivot.
-        pivot_min  = geo.attribValue("pivot_min")
+    node.parm("max_min_scale1").set(str(float(int(scale_max[0]*100000))/100000))
+    node.parm("max_min_scale2").set(str(float(int(scale_min[0]*100000))/100000))
+    return pivot_max, pivot_min  
+
+# # -----------------------------------------------------------------------------
+# #    Name: _pscale(node)
+# #  Raises: N/A
+# # Returns: None
+# #    Desc: Sets value
+# # -----------------------------------------------------------------------------
+
+# def minmax_pos_single(node):
+#     try:
+#         #Unity engine conversion
+#         engine  = node.evalParm('engine')
+#         scale   = 1/node.evalParm('scale')
+
+#         node_bounds    = node.node("objects/data/OUT_min_max_bounds")
+#         geo     = node_bounds.geometry()
+
+#         bbox    = geo.boundingBox()
+
+#         min_vec = bbox.minvec()
+#         min_pos = min(min_vec)
+
+#         max_vec = bbox.maxvec()
+#         max_pos = max(max_vec)
+
+#         if engine == 'unity' :
+#             node.parm("max_min_pos1").set(str(float(int(max_pos*100000))/100000*scale))
+#             node.parm("max_min_pos2").set(str(float(int(min_pos*100000))/100000*scale))
+#         else:
+#             node.parm("max_min_pos1").set(str(float(int(max_pos*100000))/100000))    
+#             node.parm("max_min_pos2").set(str(float(int(min_pos*100000))/100000))
+#     except :
+#         return 
 
 
-        if engine == 'unity' :
-            node.parm("max_min_piv1").set(str(float(int(pivot_max*100000))/100000*scale))    
-            node.parm("max_min_piv2").set(str(float(int(pivot_min*100000))/100000*scale))
-        else:
-            node.parm("max_min_piv1").set(str(float(int(pivot_max*100000))/100000))    
-            node.parm("max_min_piv2").set(str(float(int(pivot_min*100000))/100000))
-    except :
-        return 
+# # -----------------------------------------------------------------------------
+# #    Name: _pscale(node)
+# #  Raises: N/A
+# # Returns: None
+# #    Desc: Sets value
+# # -----------------------------------------------------------------------------
+
+# def minmax_pos_multi(node):
+#     try:
+#         #Unity engine conversion
+#         engine  = node.evalParm('engine')
+#         scale   = 1/node.evalParm('scale')
+
+#         #Brightest pixel represents the max bounds for position.
+#         position_max = node.node("textures/normalize_position/max").getPixelByUV(plane="C",u=0,v=0, component="r")
+#         #print position_max
+#         #Darkest pixel represents the min bounds for position.
+#         position_min = node.node("textures/normalize_position/min").getPixelByUV(plane="C",u=0,v=0, component="r")
+#         #print position_min
+
+#         if engine == 'unity' :
+#             node.parm("max_min_pos1").set(str(float(int(position_max[0]*100000))/100000*scale))
+#             node.parm("max_min_pos2").set(str(float(int(position_min[0]*100000))/100000*scale))
+#         else:
+#             node.parm("max_min_pos1").set(str(float(int(position_max[0]*100000))/100000))    
+#             node.parm("max_min_pos2").set(str(float(int(position_min[0]*100000))/100000))
+#     except :
+#         return 
+
+
+# # -----------------------------------------------------------------------------
+# #    Name: _pscale(node)
+# #  Raises: N/A
+# # Returns: None
+# #    Desc: Sets value
+# # -----------------------------------------------------------------------------
+
+# def minmax_pivot(node):
+#     try:
+#         #Unity engine conversion
+#         engine  = node.evalParm('engine')
+#         scale   = 1/node.evalParm('scale')
+
+#         #Pivot geo
+#         node_bounds = node.node("objects/data/rigid/min_max_bounds")
+#         geo  = node_bounds.geometry()
+
+#         #Represents the max bounds for pivot via the pivot.
+#         pivot_max = geo.attribValue("pivot_max")
+
+#         #Represents the min bounds for pivot via the pivot.
+#         pivot_min  = geo.attribValue("pivot_min")
+
+
+#         if engine == 'unity' :
+#             node.parm("max_min_piv1").set(str(float(int(pivot_max*100000))/100000*scale))    
+#             node.parm("max_min_piv2").set(str(float(int(pivot_min*100000))/100000*scale))
+#         else:
+#             node.parm("max_min_piv1").set(str(float(int(pivot_max*100000))/100000))    
+#             node.parm("max_min_piv2").set(str(float(int(pivot_min*100000))/100000))
+#     except :
+#         return 
 
 
 # -----------------------------------------------------------------------------
@@ -678,8 +736,65 @@ def minmax_frames(node):
 
 def debug_refresh(node):
     try:
-        hou.node('../objects/debug/MESH').parm('reload').pressButton()
+        node.node('objects/debug/MESH').parm('reload').pressButton()
         hou.hscript("texcache -c")
     except :
         return 
 
+# -----------------------------------------------------------------------------
+#    Name: texture_size(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Sets value
+    #min(if(ch("wrap_data")==1,if(ch("m")==2,ch("../../target_texture_size"),min(ch("numpt"),ch("size_target"))),ch("numpt")),ch("size_max"))
+    #min(ch("frange") * if(ch("wrap_data")==1,ceil(if(ch("m")==2,detail(-2, "maxpoints", 0),ch("numpt"))/ch("size_target")),1),ch("size_max"))
+# -----------------------------------------------------------------------------
+
+def texture_size(node):
+    node_data           = node.node("objects/data/OUT_TextureData")
+    node_nmpt           = node.node("objects/data/OUT_max_min")
+    #node_mesh           = node.node("objects/data/OUT_Mesh")
+    geo                 = node_nmpt.geometry()
+    numpt               = float(geo.intAttribValue('npoints'))
+    maxpoints           = float(geo.intAttribValue('maxpoints'))
+    wrap_data           = node.evalParm('wrap_data')    
+    method              = node.evalParm('method')    
+    target_texture_size = float(node.evalParm('target_texture_size'))
+    size_target         = texture_size_target(node)
+    size_max            = 8192.0
+    f1                  = float(node.evalParm('f1'))
+    f2                  = float(node.evalParm('f2'))
+    frange              = f2-f1
+
+    size1 = numpt
+    size2 = 1.0      
+    if wrap_data == 1 :
+        size1 = min(numpt,target_texture_size)
+        size2 = math.ceil(numpt/size_target)        
+        if method == 2 :
+            size1 = target_texture_size
+            size2 = math.ceil(maxpoints/size_target)
+
+    wrap = size2
+
+    size2 *= frange
+    min(size1, size_max)
+    min(size2, size_max)
+    int(size1)
+    int(size2)
+    return size1, size2, wrap
+     
+# -----------------------------------------------------------------------------
+#    Name: size_target(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Sets value
+# if(ch("m")!=2, ch("../../target_texture_size"),(floor(ch("../../target_texture_size")/3)*3))
+# -----------------------------------------------------------------------------
+
+def texture_size_target(node):   
+    method              = node.evalParm('method')    
+    target_texture_size = float(node.evalParm('target_texture_size'))
+    size_target         = math.floor(target_texture_size/float(3.0))*float(3.0) if method==2 else target_texture_size
+
+    return size_target   
