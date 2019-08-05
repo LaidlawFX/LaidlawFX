@@ -198,9 +198,7 @@ def shader(node):
         elif method == 2:
             smethod = 'fluid' 
         elif method == 3:
-            smethod = 'sprite'
-        elif method == 4:
-            smethod = 'volumetric'             
+            smethod = 'sprite'            
         #parm = smethod +"_shader_"+str(engine)
         #node.parm(parm).revertToDefaults()
         #shader = node.evalParm(parm)
@@ -235,9 +233,7 @@ def mat_check(node):
         elif method == 2:
             smethod = 'fluid' 
         elif method == 3:
-            smethod = 'sprite'
-        elif method == 4:
-            smethod = 'volumetric'            
+            smethod = 'sprite'         
         #parm = smethod +"_mat_"+str(engine)
         #node.parm(parm).revertToDefaults()
         #mat = node.evalParm(parm)
