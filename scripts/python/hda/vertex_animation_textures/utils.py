@@ -4,15 +4,587 @@
 
 import hou
 import os
+import re
 import math
 import json
 import imp
 import pkgutil
 import importlib
+from LaidlawFX import path as pth
 
 # =============================================================================
 # FUNCTIONS
 # =============================================================================
+
+# Path Functions
+
+# -----------------------------------------------------------------------------
+#    Name: project()
+#  Raises: N/A
+# Returns: None
+#    Desc: The main path of the project
+# -----------------------------------------------------------------------------
+
+def project(node):
+    project           = node.evalParm("project")
+    project_enable    = node.evalParm("enable_project")
+    
+    if project_enable == 1 and project != "" :
+        project       = project           
+    else :
+        project       = hou.hscriptExpression('$JOB')  
+    
+    os.path.normpath(project)
+    return project
+
+# -----------------------------------------------------------------------------
+#    Name: path_util(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for Initial Geometry  
+#          `chs("_project")`/Meshes/`chs("_component")`_mesh.fbx
+# -----------------------------------------------------------------------------
+
+def path_util(node,name,folder,ext,nameopt=None,component=None):
+    path_var        = "path_"+name
+    path            = node.evalParm(path_var)
+    enable_var      = "enable_"+name
+    path_enable     = node.evalParm(enable_var)  
+
+    if path_enable  == 1 and path != "" :
+        path        = path           
+    else :
+        frame_tex           = node.evalParm('frame_tex')
+        method              = node.evalParm('method')
+
+        if nameopt :
+            name_ext = nameopt
+        else :
+            name_ext = name
+
+        if not component :
+            component = pth.component(node)  
+
+        if ext is 'geometry' :            
+            ext  = node.evalParm("ext_geometry")
+            if ext == "" :
+                ext = '.fbx'
+
+        filelist    =['/',component,'_',name_ext,ext]                 
+
+        if ext is 'texture' :
+            ext  = node.evalParm("ext_texture")
+            if ext == "" :
+                ext = '.exr'
+            filelist    =['/',component,'_',name_ext,ext]   
+            if frame_tex == 1 and method == 2 :
+                frame          = '.'+str(hou.intFrame()).zfill(5) 
+                folder = "Resources/StreamingAssets/"+component
+                filelist    =['/',name_ext,frame,ext]     
+
+
+        dirlist     =[project(node),folder]
+           
+        path        = pth.path_create(dirlist,filelist).replace("\\",'/')         
+    
+    os.path.normpath(path)    
+    return path 
+
+# -----------------------------------------------------------------------------
+#    Name: path_atlas(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for Position  
+#          `chs("_project")`/Textures/`chs("_component")`_pos.exr
+# -----------------------------------------------------------------------------
+
+def path_atlas(node):         
+    ext = 'texture'   
+    path = path_util(node,"data","Data",ext,"dta")  
+    return path   
+
+# -----------------------------------------------------------------------------
+#    Name: path_geo(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for Initial Geometry  
+#          `chs("_project")`/Meshes/`chs("_component")`_mesh.fbx
+# -----------------------------------------------------------------------------
+
+def path_geo(node):
+    ext = 'geometry'   
+    path = path_util(node,"geo","Meshes",ext,"mesh")  
+    return path              
+
+# -----------------------------------------------------------------------------
+#    Name: path_geo_ext(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for Initial Geometry  
+#          `chs("_project")`/Meshes/`chs("_component")`_mesh.fbx
+# -----------------------------------------------------------------------------
+
+def path_geo_ext(node):
+    filename, file_extension = os.path.splitext(path_geo(node))
+    file_extension.lower()
+    value = 0
+    if file_extension == '.fbx':
+        value = 1  
+    return value  
+
+# -----------------------------------------------------------------------------
+#    Name: path_pos(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for Position  
+#          `chs("_project")`/Textures/`chs("_component")`_pos.exr
+# -----------------------------------------------------------------------------
+
+def path_pos(node):
+    ext = 'texture'     
+    path = path_util(node,"pos","Textures",ext)  
+    return path    
+
+# -----------------------------------------------------------------------------
+#    Name: path_norm(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for Normals
+#          `chs("_project")`/Textures/`chs("_component")`_norm.exr
+# -----------------------------------------------------------------------------
+
+def path_norm(node):
+    ext = 'texture'  
+    path = path_util(node,"norm","Textures",ext,"nml")  
+    return path   
+
+# -----------------------------------------------------------------------------
+#    Name: path_col(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for color
+#          `chs("_project")`/Textures/`chs("_component")`_col.exr
+# -----------------------------------------------------------------------------
+
+def path_col(node):
+    ext = 'texture'    
+    path = path_util(node,"col","Textures",ext)  
+    return path    
+
+# -----------------------------------------------------------------------------
+#    Name: path_rot(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for orient
+#          `chs("_project")`/Textures/`chs("_component")`_rot.exr
+# -----------------------------------------------------------------------------
+
+def path_rot(node):
+    ext = 'texture'     
+    path = path_util(node,"rot","Textures",ext)  
+    return path  
+
+# -----------------------------------------------------------------------------
+#    Name: path_scale(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for scale
+#          `chs("_project")`/Textures/`chs("_component")`_scale.exr
+# -----------------------------------------------------------------------------
+
+def path_scale(node):
+    ext = 'texture'    
+    path = path_util(node,"scale","Textures",ext,"scl")  
+    return path      
+# -----------------------------------------------------------------------------
+#    Name: path_uv(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for UVs
+#          `chs("_project")`/Textures/`chs("_component")`_uv.exr
+# -----------------------------------------------------------------------------
+
+def path_uv(node):
+    ext = 'texture'     
+    path = path_util(node,"uv","Textures",ext,"uvw")  
+    return path      
+
+# -----------------------------------------------------------------------------
+#    Name: path_mat(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for Materials in Unity 
+#          `chs("_project")`/Materials/`chs("_component")`_mat.mat
+# -----------------------------------------------------------------------------
+
+def path_mat(node):
+    ext = '.mat' 
+    path = path_util(node,"mat","Materials",ext)  
+    return path     
+
+# -----------------------------------------------------------------------------
+#    Name: path_data(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for text data 
+#          `chs("_project")`/Materials/`chs("_component")`_data.json
+# -----------------------------------------------------------------------------
+
+def path_data(node):
+    ext = '.json'
+    path = path_util(node,"data","Materials",ext)  
+    return path      
+
+# -----------------------------------------------------------------------------
+#    Name: path_shader(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path for shader
+#          `chs("_project")`/Shaders/`chs("_component")`vertex.shader
+# -----------------------------------------------------------------------------
+
+def path_shader(node):
+    smethod = method_str(node)   
+    ext = '.shader'
+    path = path_util(node,"shader","Shaders",ext,"vertex",smethod)  
+    return path  
+
+# -----------------------------------------------------------------------------
+#    Name: channel_comp(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Adds a suffix when splitting the channels between multiple textures
+# -----------------------------------------------------------------------------
+
+def channel_comp(node):
+    name        = node.name()
+    parent      = node.parent().name()
+    try :
+        coppath     = node.node("../../textures/"+parent+"/"+name).path()
+    except :
+        coppath     = "refresh node"
+
+    path        = node.evalParm('path')
+    os.path.normpath(path)
+    filename, file_extension = os.path.splitext(path)
+    filelist    =[filename, '_', name, file_extension]    
+    copoutput   =''.join(filelist) 
+    os.path.normpath(copoutput).replace('//', '/') 
+                       
+    return coppath, copoutput
+
+
+# -----------------------------------------------------------------------------
+#    Name: oppath_geo(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Path to Geometry export object
+#          `ifs(ch("../enable_name")==1,"/export/"+chs("../name"),"/export/MESH")`
+#          `opfullpath("..") + chsop("export_node")`
+# -----------------------------------------------------------------------------
+
+def oppath_geo(node):
+    name        = 'MESH'
+    enable      = node.evalParm("enable_name")
+    name_parm   = node.evalParm("name")
+    if (enable == 1) and (name_parm != '') :
+        name = re.sub('[. ]','',name_parm)
+        
+    node_path               = node.path()
+    node_name               = node_path.replace('/', '')
+    temp_subnet             = '_temp_vat_'+node_name
+    export_node             = '/obj/'+temp_subnet     
+    oppath                  = export_node +'/' + name
+ 
+    return oppath, name, temp_subnet 
+
+# -----------------------------------------------------------------------------
+#    Name: oppath_geo_create(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Create Mesh node on export
+# -----------------------------------------------------------------------------
+#
+
+def oppath_geo_create(node):
+    oppath, name, temp_subnet = oppath_geo(node) 
+
+    # delete temporary export subnet if it exist
+    export_node             = hou.node('/obj/'+temp_subnet)
+    if export_node != None :
+        export_node.destroy()
+
+    # Create parent subnet folder in a directory no one will ever name
+    parent_node             = hou.node('/obj').createNode('subnet', temp_subnet)
+    parent_node.setColor(hou.Color( (0.0, 0.6, 1.0) ) )    
+    parent_node.moveToGoodPosition()
+
+    # Create geometry node we will export      
+    fbx_node                = parent_node.createNode('geo', name)          
+    fbx_node.setColor(hou.Color( (0.0, 0.6, 1.0) ) )
+    fbx_node.moveToGoodPosition()
+
+    fbx_node.parm('tx').set(node.evalParm("tx")) 
+    fbx_node.parm('ty').set(node.evalParm("ty")) 
+    fbx_node.parm('tz').set(node.evalParm("tz"))
+    fbx_node.parm('sx').set(node.evalParm("sx")) 
+    fbx_node.parm('sy').set(node.evalParm("sy")) 
+    fbx_node.parm('sz').set(node.evalParm("sz")) 
+    fbx_node.parm('rx').set(node.evalParm("rx")) 
+    fbx_node.parm('ry').set(node.evalParm("ry")) 
+    fbx_node.parm('rz').set(node.evalParm("rz")) 
+    fbx_node.parm('px').set(node.evalParm("px")) 
+    fbx_node.parm('py').set(node.evalParm("py")) 
+    fbx_node.parm('pz').set(node.evalParm("pz"))         
+
+    # import the mesh data 
+    fbx_node_import         = fbx_node.createNode('object_merge','Import') 
+    fbx_node_import.setColor(hou.Color( (0.0, 0.6, 1.0) ) )    
+    fbx_node_import.moveToGoodPosition()
+
+    fbx_node_import         = fbx_node.node('Import')
+    fbx_node_import.parm('xformtype').set('none')
+    mesh_node               = node.node('data/OUT_Mesh')
+    fbx_node_import.parm('objpath1').set(mesh_node.path())           
+
+    matnet_node             = parent_node.createNode('matnet', 'material')          
+    matnet_node.setColor(hou.Color( (0.0, 0.6, 1.0) ) )
+    matnet_node.moveToGoodPosition()
+
+    mat_name                = pth.component(node) + '_mat'
+    mat_node                = matnet_node.createNode('materialbuilder', mat_name)          
+    mat_node.setColor(hou.Color( (0.0, 0.6, 1.0) ) )
+    mat_node.moveToGoodPosition()    
+
+    mat_path                = node.evalParm("shop_materialpath")
+    if mat_path :
+        mat_node            = node.node(mat_path)
+        
+    fbx_node.parm('shop_materialpath').set(mat_node.path()) 
+
+# -----------------------------------------------------------------------------
+#    Name: oppath_geo_delete(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Delete the parent node
+# -----------------------------------------------------------------------------
+
+def oppath_geo_delete(node):
+    oppath, name, temp_subnet = oppath_geo(node) 
+
+    # delete temporary export subnet if it exist
+    export_node             = hou.node('/obj/'+temp_subnet)
+    if export_node != None :
+        export_node.destroy()
+
+
+# File Checks/Updates/Creation
+
+# -----------------------------------------------------------------------------
+#    Name: shader(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Checks if shader exist and creates it otherwise.
+# -----------------------------------------------------------------------------
+
+def shader(node):
+    path = path_shader(node)
+    if not os.path.isfile(path) :
+        engine = node.evalParm('engine') 
+        smethod = method_str(node)           
+        curdir      =os.path.dirname(os.path.realpath(__file__))
+        path_source =os.path.join(curdir,'engines',engine,smethod +'.shader')  
+
+        with open(path_source, 'r') as file:
+            data = file.read()  
+
+        directory = os.path.dirname(path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)   
+        with open(path,'w+') as f:
+            f.write(data)            
+
+# -----------------------------------------------------------------------------
+#    Name: method_int(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Checks if material exist and creates it otherwise.
+# -----------------------------------------------------------------------------
+
+def method_str(node):
+    method = node.evalParm('method')
+    if   method == 0:
+        smethod = 'soft'
+    elif method == 1:
+        smethod = 'rigid'   
+    elif method == 2:
+        smethod = 'fluid' 
+    elif method == 3:
+        smethod = 'sprite'  
+    return smethod
+
+# -----------------------------------------------------------------------------
+#    Name: mat_check(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Checks if material exist and creates it otherwise.
+# -----------------------------------------------------------------------------
+
+def mat_check(node):
+    path = path_mat(node)
+    if not os.path.isfile(path) :
+        engine = node.evalParm('engine') 
+        smethod = method_str(node)        
+        curdir      =os.path.dirname(os.path.realpath(__file__))
+        path_source =os.path.join(curdir,'engines',engine,smethod +'.mat')  
+
+        with open(path_source, 'r') as file:
+            data = file.read()          
+
+        directory = os.path.dirname(path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)   
+        with open(path,'w+') as f:
+            f.write(data)
+    
+# -----------------------------------------------------------------------------
+#    Name: mat_update(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Updates material values.
+# -----------------------------------------------------------------------------
+
+def mat_update(node):
+    #print 'Updating Material'
+    path = path_mat(node) 
+    # print path
+    if not os.path.isfile(path) :
+        mat_check(node)
+    else :
+        node_bounds   = node.node("data/OUT_max_min")
+        geo           = node_bounds.geometry()        
+        _numOfFrames = str(geo.attribValue("frange"))
+        _speed       = str(geo.attribValue("speed"))
+        _posMax      = str(geo.attribValue("bbx_max"))
+        _posMin      = str(geo.attribValue("bbx_min"))
+        _scaleMax    = str(geo.attribValue("scale_max"))
+        _scaleMin    = str(geo.attribValue("scale_min"))
+        _pivMax      = str(geo.attribValue("pivot_max"))
+        _pivMin      = str(geo.attribValue("pivot_min"))
+        _doubleTex   = str(node.evalParm('bitDepthPack'))
+        _padPowTwo   = str(node.evalParm('padpowtwo'))
+        _textureSizeX= str(geo.attribValue("img_size1"))
+        _textureSizeY= str(geo.attribValue("img_size2"))
+        _paddedSizeX = str(geo.attribValue("pad_size1"))
+        _paddedSizeY = str(geo.attribValue("pad_size2"))        
+        _packNorm    = str(node.evalParm('pack_norm'))
+        _packPscale  = str(node.evalParm('pack_pscale'))
+        _normData    = str(node.evalParm('normalize_data'))
+        _width       = str(node.evalParm('width_height1'))
+        _height      = str(node.evalParm('width_height2'))      
+        
+        numOfFrames  = -1
+        speed        = -1
+        posMax       = -1
+        posMin       = -1
+        scaleMax     = -1
+        scaleMin     = -1
+        pivMax       = -1
+        pivMin       = -1
+        packNorm     = -1
+        doubleTex    = -1
+        padPowTwo    = -1
+        textureSizeX = -1
+        textureSizeY = -1
+        paddedSizeX  = -1
+        paddedSizeY  = -1        
+        packPscale   = -1
+        normData     = -1
+        width        = -1
+        height       = -1        
+        
+        with open(path) as f:
+            for num, line in enumerate(f, 1):
+                if "_numOfFrames" in line:
+                    numOfFrames = num
+                if "_speed"     in line:
+                    speed       = num
+                if "_posMax"    in line:
+                    posMax      = num
+                if "_posMin"    in line:
+                    posMin      = num
+                if "_scaleMax"  in line:
+                    scaleMax    = num
+                if "_scaleMin"  in line:
+                    scaleMin    = num
+                if "_pivMax"    in line:
+                    pivMax      = num
+                if "_pivMin"    in line:
+                    pivMin      = num
+                if "_packNorm"  in line:
+                    packNorm    = num
+                if "_doubleTex" in line:
+                    doubleTex   = num
+                if "_padPowTwo" in line:
+                    padPowTwo   = num
+                if "_textureSizeX" in line:
+                    textureSizeX= num
+                if "_textureSizeY" in line:
+                    textureSizeY= num
+                if "_paddedSizeX" in line:
+                    paddedSizeX = num
+                if "_paddedSizeY" in line:
+                    paddedSizeY = num                    
+                if "_packPscale" in line:
+                    packPscale  = num 
+                if "_normData"  in line:
+                    normData    = num
+                if "_width"    in line:
+                    width       = num
+                if "_height"    in line:
+                    height      = num                    
+
+        list = open(path).readlines()
+        if "_numOfFrames" != -1 :
+            list[numOfFrames-1] = '    - _numOfFrames: '+_numOfFrames+'\n'
+        if "_speed"       != -1 :    
+            list[speed-1]       = '    - _speed: '      +_speed+'\n'
+        if "_posMax"      != -1 :    
+            list[posMax-1]      = '    - _posMax: '     +_posMax+'\n'
+        if "_posMin"      != -1 :    
+            list[posMin-1]      = '    - _posMin: '     +_posMin+'\n'
+        if "_scaleMax"    != -1 :   
+            list[scaleMax-1]    = '    - _scaleMax: '   +_scaleMax+'\n'
+        if "_scaleMin"    != -1 :  
+            list[scaleMin-1]    = '    - _scaleMin: '   +_scaleMin+'\n'
+        if "_pivMax"      != -1 :   
+            list[pivMax-1]      = '    - _pivMax: '     +_pivMax+'\n'
+        if "_pivMin"      != -1 :  
+            list[pivMin-1]      = '    - _pivMin: '     +_pivMin+'\n'
+        if "_packNorm"    != -1 :  
+            list[packNorm-1]    = '    - _packNorm: '   +_packNorm+'\n'
+        if "_doubleTex"    != -1 :  
+            list[doubleTex-1]    = '    - _doubleTex: '   +_doubleTex+'\n'
+        if "_padPowTwo"    != -1 :  
+            list[padPowTwo-1]    = '    - _padPowTwo: '   +_padPowTwo+'\n'
+        if "_textureSizeX"    != -1 :  
+            list[textureSizeX-1] = '    - _textureSizeX: '   +_textureSizeX+'\n'
+        if "_textureSizeY"    != -1 :  
+            list[textureSizeY-1] = '    - _textureSizeY: '   +_textureSizeY+'\n'
+        if "_paddedSizeX"    != -1 :  
+            list[paddedSizeX-1] = '    - _paddedSizeX: '   +_paddedSizeX+'\n'
+        if "_paddedSizeY"    != -1 :  
+            list[paddedSizeY-1] = '    - _paddedSizeY: '   +_paddedSizeY+'\n'            
+        if "_packPscale"  != -1 :    
+            list[packPscale-1]  = '    - _packPscale: ' +_packPscale+'\n'
+        if "_normData"    != -1 :    
+            list[normData-1]    = '    - _normData: '   +_normData+'\n'
+        if "_width"      != -1 :   
+            list[width-1]       = '    - _width: '      +_width+'\n'
+        if "_height"      != -1 :  
+            list[height-1]      = '    - _height: '     +_height+'\n'            
+        open(path,'w').write(''.join(list))       
+
 
 # -----------------------------------------------------------------------------
 #    Name: data(node)
@@ -23,7 +595,7 @@ import importlib
 
 def data(node):
     #print 'Updating Json'
-    path            = os.path.abspath(node.evalParm('path_data'))
+    path            = path_data(node)
     directory       = os.path.dirname(path)
     #remove file if exist
     try:
@@ -33,19 +605,24 @@ def data(node):
     #create directory if it does not exist    
     if not os.path.exists(directory):
         os.makedirs(directory)
-    
-    engine       = str(node.evalParm('engine'))
-    method       = node.evalParm('method')
-    component    = node.evalParm('_component')        
-    _numOfFrames = str(node.evalParm('num_frames'))
-    _speed       = str(node.evalParm('speed'))
-    _posMax      = str(node.evalParm('max_min_pos1'))
-    _posMin      = str(node.evalParm('max_min_pos2'))
-    _scaleMax    = str(node.evalParm('max_min_scale1'))
-    _scaleMin    = str(node.evalParm('max_min_scale2'))
-    _pivMax      = str(node.evalParm('max_min_piv1'))
-    _pivMin      = str(node.evalParm('max_min_piv2'))
+    component    = pth.component(node) 
+    node_bounds   = node.node("data/OUT_max_min")
+    geo           = node_bounds.geometry()        
+    _numOfFrames = str(geo.attribValue("frange"))
+    _speed       = str(geo.attribValue("speed"))
+    _posMax      = str(geo.attribValue("bbx_max"))
+    _posMin      = str(geo.attribValue("bbx_min"))
+    _scaleMax    = str(geo.attribValue("scale_max"))
+    _scaleMin    = str(geo.attribValue("scale_min"))
+    _pivMax      = str(geo.attribValue("pivot_max"))
+    _pivMin      = str(geo.attribValue("pivot_min"))           
     _packNorm    = str(node.evalParm('pack_norm'))
+    _doubleTex   = str(node.evalParm('bitDepthPack'))
+    _padPowTwo   = str(node.evalParm('padpowtwo'))
+    _textureSizeX= str(geo.attribValue("img_size1"))
+    _textureSizeY= str(geo.attribValue("img_size2"))
+    _paddedSizeX = str(geo.attribValue("pad_size1"))
+    _paddedSizeY = str(geo.attribValue("pad_size2"))    
     _packPscale  = str(node.evalParm('pack_pscale'))
     _normData    = str(node.evalParm('normalize_data'))
     _width       = str(node.evalParm('width_height1'))
@@ -63,33 +640,115 @@ def data(node):
         '_pivMax'       : _pivMax,
         '_pivMin'       : _pivMin,
         '_packNorm'     : _packNorm,
+        '_doubleTex'    : _doubleTex,
+        '_padPowTwo'    : _padPowTwo,
+        '_textureSizeX' : _textureSizeX,
+        '_textureSizeY' : _textureSizeY,
+        '_paddedSizeX'  : _paddedSizeX,
+        '_paddedSizeY'  : _paddedSizeY,        
         '_packPscale'   : _packPscale,
         '_normData'     : _normData,
         '_width'        : _width,
         '_height'       : _height         
     })
-    with open(path, 'w') as f:  
-        json.dump(data, f, indent=4, sort_keys=True)
-                  
+    try:
+        #print path
+        with open(path, 'w') as f:  
+            json.dump(data, f, indent=4, sort_keys=True)
+    except :
+        print "Did not write realtime data."
+        return   
+
+# UI Presets
+
 # -----------------------------------------------------------------------------
-#    Name: _project()
+#    Name: preset(node)
 #  Raises: N/A
 # Returns: None
-#    Desc: Defines what the component should be called.
+#    Desc: Performs the presets for each engine.
 # -----------------------------------------------------------------------------
 
-def _project(node):
-    project           = node.evalParm("project")
-    project_enable    = node.evalParm("enable_project")
+def preset(node):
+    engine = node.evalParm('engine')
+    method = node.evalParm('method')   
     
-    if project_enable == 1 and project != "" :
-        project       = project           
-    else :
-        project       = hou.hscriptExpression('$JOB')  
-    
-    os.path.normpath(project)
-    return project
+    reset(node)
 
+    module = 'hda.vertex_animation_textures.engines.'
+    module += engine
+    module += '.preset'
+    module_check = pkgutil.find_loader(module)
+    if module_check is not None :
+        #print module
+        preset = importlib.import_module(module)
+        preset.preset(node,method)
+
+# -----------------------------------------------------------------------------
+#    Name: preset_path(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Performs the presets for each engine.
+# -----------------------------------------------------------------------------
+
+def preset_path(node):
+    engine = node.evalParm('engine')
+    method = node.evalParm('method')   
+
+    module = 'hda.vertex_animation_textures.engines.'
+    module += engine
+    module += '.preset'
+    module_check = pkgutil.find_loader(module)
+    path =  None
+    if module_check is not None :
+        #print module
+        preset = importlib.import_module(module)
+        path = os.path.abspath(preset.__file__)
+    print path
+    return path
+
+# -----------------------------------------------------------------------------
+#    Name: reset(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Reset all parameters
+# -----------------------------------------------------------------------------
+
+def reset(node):     
+    node.parm('normalize_data').revertToDefaults() 
+    node.parm('enable_geo').revertToDefaults() 
+    node.parm('path_geo').revertToDefaults()
+    node.parm('enable_pos').revertToDefaults() 
+    node.parm('path_pos').revertToDefaults() 
+    node.parm('enable_rot').revertToDefaults() 
+    node.parm('path_rot').revertToDefaults()
+    node.parm('enable_scale').revertToDefaults() 
+    node.parm('path_scale').revertToDefaults()     
+    node.parm('enable_norm').revertToDefaults() 
+    node.parm('path_norm').revertToDefaults()
+    node.parm('enable_col').revertToDefaults() 
+    node.parm('path_col').revertToDefaults()
+    node.parm('enable_mat').revertToDefaults()
+    node.parm('path_mat').revertToDefaults()
+    node.parm('enable_shader').revertToDefaults() 
+    node.parm('path_shader').revertToDefaults()
+    node.parm('reverse_norm').revertToDefaults()     
+    node.parm('convertcolorspace').revertToDefaults()
+    node.parm('depth').revertToDefaults()     
+    node.parm('pack_norm').revertToDefaults()
+    node.parm('pack_pscale').revertToDefaults()     
+    node.parm('coord_pos').revertToDefaults()
+    node.parm('invert_pos').revertToDefaults()
+    node.parm('coord_rot').revertToDefaults() 
+    node.parm('coord_col').revertToDefaults() 
+    node.parm('invert_col').revertToDefaults() 
+    node.parm('target_polycount').revertToDefaults() 
+    node.parm('target_texture_size').revertToDefaults() 
+    node.parm('scale').revertToDefaults()
+    node.parm('shop_materialpath').revertToDefaults()
+    node.parm('scale_max_min').revertToDefaults()
+
+# UI Control Options
+                
 # -----------------------------------------------------------------------------
 #    Name: primcount(node)
 #  Raises: N/A
@@ -98,7 +757,7 @@ def _project(node):
 # -----------------------------------------------------------------------------
 
 def primcount(node):
-    polyNode    = node.node("objects/data/IN")
+    polyNode    = node.node("data/IN")
     print polyNode.path()
     geo         = polyNode.geometry()
     count       = geo.countPrimType('Poly')
@@ -180,85 +839,6 @@ def _depth_uv(node):
     return ntype, stype  
 
 # -----------------------------------------------------------------------------
-#    Name: shader(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Checks if shader exist and creates it otherwise.
-# -----------------------------------------------------------------------------
-
-def shader(node):
-    path_shader = os.path.abspath(node.evalParm('path_shader'))
-    if not os.path.isfile(path_shader) :
-        engine = node.evalParm('engine') 
-        method = node.evalParm('method')
-        if   method == 0:
-            smethod = 'soft'
-        elif method == 1:
-            smethod = 'rigid'   
-        elif method == 2:
-            smethod = 'fluid' 
-        elif method == 3:
-            smethod = 'sprite'            
-        #parm = smethod +"_shader_"+str(engine)
-        #node.parm(parm).revertToDefaults()
-        #shader = node.evalParm(parm)
-        curdir      =os.path.dirname(os.path.realpath(__file__))
-        path_source =os.path.join(curdir,'engines',engine,smethod +'.shader')  
-
-        with open(path_source, 'r') as file:
-            data = file.read()  
-
-        directory = os.path.dirname(path_shader)
-        if not os.path.exists(directory):
-            os.makedirs(directory)   
-        with open(path_shader,'w+') as f:
-            f.write(data)            
-
-# -----------------------------------------------------------------------------
-#    Name: mat_check(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Checks if material exist and creates it otherwise.
-# -----------------------------------------------------------------------------
-
-def mat_check(node):
-    path_mat = os.path.abspath(node.evalParm('path_mat'))
-    if not os.path.isfile(path_mat) :
-        engine = node.evalParm('engine') 
-        method = node.evalParm('method')
-        if   method == 0:
-            smethod = 'soft'
-        elif method == 1:
-            smethod = 'rigid'   
-        elif method == 2:
-            smethod = 'fluid' 
-        elif method == 3:
-            smethod = 'sprite'         
-        #parm = smethod +"_mat_"+str(engine)
-        #node.parm(parm).revertToDefaults()
-        #mat = node.evalParm(parm)
-        curdir      =os.path.dirname(os.path.realpath(__file__))
-        path_source =os.path.join(curdir,'engines',engine,smethod +'.mat')  
-
-        with open(path_source, 'r') as file:
-            data = file.read()          
-
-        directory = os.path.dirname(path_mat)
-        if not os.path.exists(directory):
-            os.makedirs(directory)   
-        with open(path_mat,'w+') as f:
-            f.write(data)
-    
-    component   = str(node.evalParm('_component')) + '_mat'
-    componentPath = '/mat/'+ component
-    matNode     = hou.node(componentPath)
-    if not matNode:
-        matNode = hou.node('/mat').createNode('materialbuilder', component)
-        matNode.moveToGoodPosition()
-        matNode.setColor(hou.Color( (0.0, 0.6, 1.0) ) )   
-
-
-# -----------------------------------------------------------------------------
 #    Name: MakeList(node)
 #  Raises: N/A
 # Returns: None
@@ -279,451 +859,6 @@ def list_engines(node):
         return ["MissingEnginesInScripts", "MissingEnginesInScripts"]  
 
 # -----------------------------------------------------------------------------
-#    Name: main(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Performs the presets for each engine.
-# -----------------------------------------------------------------------------
-
-def preset(node):
-    engine = node.evalParm('engine')
-    method = node.evalParm('method')   
-    
-    reset(node)
-
-    module = 'hda.vertex_animation_textures.engines.'
-    module += engine
-    module += '.preset'
-    preset_loader = pkgutil.find_loader(module)
-    found = preset_loader is not None
-    if found :
-        #print module
-        preset = importlib.import_module(module)
-        preset.preset(node,method)
-
-
-# -----------------------------------------------------------------------------
-#    Name: reset(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Reset all parameters
-# -----------------------------------------------------------------------------
-
-def reset(node):
-    node.parm('num_frames').revertToDefaults()
-    node.parm('speed').revertToDefaults()    
-    node.parm('max_min_pos1').revertToDefaults() 
-    node.parm('max_min_pos2').revertToDefaults()
-    node.parm('max_min_piv1').revertToDefaults() 
-    node.parm('max_min_piv2').revertToDefaults()     
-    node.parm('max_min_scale1').revertToDefaults() 
-    node.parm('max_min_scale2').revertToDefaults()
-    node.parm('width_height1').revertToDefaults() 
-    node.parm('width_height2').revertToDefaults()     
-    node.parm('normalize_data').revertToDefaults() 
-    node.parm('enable_geo').revertToDefaults() 
-    node.parm('path_geo').revertToDefaults()
-    node.parm('enable_pos').revertToDefaults() 
-    node.parm('path_pos').revertToDefaults() 
-    node.parm('enable_rot').revertToDefaults() 
-    node.parm('path_rot').revertToDefaults()
-    node.parm('enable_scale').revertToDefaults() 
-    node.parm('path_scale').revertToDefaults()     
-    node.parm('enable_norm').revertToDefaults() 
-    node.parm('path_norm').revertToDefaults() 
-    node.parm('enable_col').revertToDefaults() 
-    node.parm('path_col').revertToDefaults()
-    node.parm('update_mat').revertToDefaults() 
-    node.parm('path_mat').revertToDefaults()      
-    node.parm('create_shader').revertToDefaults() 
-    node.parm('path_shader').revertToDefaults()
-    node.parm('reverse_norm').revertToDefaults()     
-    node.parm('convertcolorspace').revertToDefaults()
-    node.parm('depth').revertToDefaults()     
-    node.parm('pack_norm').revertToDefaults()
-    node.parm('pack_pscale').revertToDefaults()     
-    node.parm('coord_pos').revertToDefaults()
-    node.parm('invert_pos').revertToDefaults()
-    node.parm('coord_rot').revertToDefaults() 
-    node.parm('coord_col').revertToDefaults() 
-    node.parm('invert_col').revertToDefaults() 
-    node.parm('target_polycount').revertToDefaults() 
-    node.parm('target_texture_size').revertToDefaults() 
-    node.parm('scale').revertToDefaults()
-    node.parm('shop_materialpath').revertToDefaults()
-
-# -----------------------------------------------------------------------------
-#    Name: mat_update(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Updates material values.
-# -----------------------------------------------------------------------------
-
-def mat_update(node):
-    #print 'Updating Material'
-    path = os.path.abspath(node.evalParm('path_mat'))  
-    if os.path.isfile(path) :
-        engine       = str(node.evalParm('engine'))
-        method       = node.evalParm('method')
-        _numOfFrames = str(node.evalParm('num_frames'))
-        _speed       = str(node.evalParm('speed'))
-        _posMax      = str(node.evalParm('max_min_pos1'))
-        _posMin      = str(node.evalParm('max_min_pos2'))
-        _scaleMax    = str(node.evalParm('max_min_scale1'))
-        _scaleMin    = str(node.evalParm('max_min_scale2'))
-        _pivMax      = str(node.evalParm('max_min_piv1'))
-        _pivMin      = str(node.evalParm('max_min_piv2'))
-        _packNorm    = str(node.evalParm('pack_norm'))
-        _packPscale  = str(node.evalParm('pack_pscale'))
-        _normData    = str(node.evalParm('normalize_data'))
-        _width       = str(node.evalParm('width_height1'))
-        _height      = str(node.evalParm('width_height2'))        
-        
-        numOfFrames  = -1
-        speed        = -1
-        posMax       = -1
-        posMin       = -1
-        scaleMax     = -1
-        scaleMin     = -1
-        pivMax       = -1
-        pivMin       = -1
-        packNorm     = -1
-        packPscale   = -1
-        normData     = -1
-        width        = -1
-        height       = -1        
-        
-        with open(path) as f:
-            for num, line in enumerate(f, 1):
-                if "_numOfFrames" in line:
-                    numOfFrames = num
-                if "_speed"     in line:
-                    speed       = num
-                if "_posMax"    in line:
-                    posMax      = num
-                if "_posMin"    in line:
-                    posMin      = num
-                if "_scaleMax"  in line:
-                    scaleMax    = num
-                if "_scaleMin"  in line:
-                    scaleMin    = num
-                if "_pivMax"    in line:
-                    pivMax      = num
-                if "_pivMin"    in line:
-                    pivMin      = num
-                if "_packNorm"  in line:
-                    packNorm    = num
-                if "_packPscale" in line:
-                    packPscale  = num 
-                if "_normData"  in line:
-                    normData    = num
-                if "_width"    in line:
-                    width       = num
-                if "_height"    in line:
-                    height      = num                    
-
-        list = open(path).readlines()
-        if "_numOfFrames" != -1 :
-            list[numOfFrames-1] = '    - _numOfFrames: '+_numOfFrames+'\n'
-        if "_speed"       != -1 :    
-            list[speed-1]       = '    - _speed: '      +_speed+'\n'
-        if "_posMax"      != -1 :    
-            list[posMax-1]      = '    - _posMax: '     +_posMax+'\n'
-        if "_posMin"      != -1 :    
-            list[posMin-1]      = '    - _posMin: '     +_posMin+'\n'
-        if "_scaleMax"    != -1 :   
-            list[scaleMax-1]    = '    - _scaleMax: '   +_scaleMax+'\n'
-        if "_scaleMin"    != -1 :  
-            list[scaleMin-1]    = '    - _scaleMin: '   +_scaleMin+'\n'
-        if "_pivMax"      != -1 :   
-            list[pivMax-1]      = '    - _pivMax: '     +_pivMax+'\n'
-        if "_pivMin"      != -1 :  
-            list[pivMin-1]      = '    - _pivMin: '     +_pivMin+'\n'
-        if "_packNorm"    != -1 :  
-            list[packNorm-1]    = '    - _packNorm: '   +_packNorm+'\n'
-        if "_packPscale"  != -1 :    
-            list[packPscale-1]  = '    - _packPscale: ' +_packPscale+'\n'
-        if "_normData"    != -1 :    
-            list[normData-1]    = '    - _normData: '   +_normData+'\n'
-        if "_width"      != -1 :   
-            list[width-1]       = '    - _width: '      +_width+'\n'
-        if "_height"      != -1 :  
-            list[height-1]      = '    - _height: '     +_height+'\n'            
-        open(path,'w').write(''.join(list))       
-
-# -----------------------------------------------------------------------------
-#    Name: path_cop_bc_uv(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Performs the presets for each engine.
-# -----------------------------------------------------------------------------
-
-def channel_comp(node):
-    name        = node.name()
-    parent      = node.parent().name()
-    try :
-        coppath     = node.node("../../textures/"+parent+"/"+name).path()
-    except :
-        coppath     = "refresh node"
-
-    path        = node.evalParm('path')
-    os.path.normpath(path)
-    filename, file_extension = os.path.splitext(path)
-    filelist    =[filename, '_', name, file_extension]    
-    copoutput   =''.join(filelist) 
-    os.path.normpath(copoutput).replace('//', '/') 
-                       
-    return coppath, copoutput
-
-# # -----------------------------------------------------------------------------
-# #    Name: _pscale(node)
-# #  Raises: N/A
-# # Returns: None
-# #    Desc: Sets value
-# # -----------------------------------------------------------------------------
-
-# def minmax_pscale(node):
-#     try:
-#         #Brightest pixel represents the max bounds for scale.
-#         scale_max = node.node("textures/normalize_pscale/max").getPixelByUV(plane="C",u=0,v=0, component="r")
-#         #Darkest pixel represents the min bounds for position.
-#         scale_min = node.node("textures/normalize_pscale/min").getPixelByUV(plane="C",u=0,v=0, component="r")
-
-#         node.parm("max_min_scale1").set(str(float(int(scale_max[0]*100000))/100000))
-#         node.parm("max_min_scale2").set(str(float(int(scale_min[0]*100000))/100000))
-#     except :
-#         return    
-
-# # -----------------------------------------------------------------------------
-# #    Name: _scale(node)
-# #  Raises: N/A
-# # Returns: None
-# #    Desc: Sets value
-# # -----------------------------------------------------------------------------
-
-# def minmax_scale(node):
-#     try:
-#         #Brightest pixel represents the max bounds for scale.
-#         scale_max = node.node("textures/normalize_scale/max").getPixelByUV(plane="C",u=0,v=0, component="r")
-#         #Darkest pixel represents the min bounds for position.
-#         scale_min = node.node("textures/normalize_scale/min").getPixelByUV(plane="C",u=0,v=0, component="r")
-
-
-#         node.parm("max_min_scale1").set(str(float(int(scale_max[0]*100000))/100000))
-#         node.parm("max_min_scale2").set(str(float(int(scale_min[0]*100000))/100000))
-#     except :
-#         return  
-
-
-# -----------------------------------------------------------------------------
-#    Name: minmax_pos(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Sets value
-# -----------------------------------------------------------------------------
-
-def minmax_pos(node):
-    node_bounds    = node.node("objects/data/OUT_max_min")
-    geo     = node_bounds.geometry()
-
-    #Represents the max bounds for pivot via the pivot.
-    bbx_max = geo.attribValue("bbx_max")
-
-    #Represents the min bounds for pivot via the pivot.
-    bbx_min  = geo.attribValue("bbx_min")
-
-    node.parm("max_min_pos1").set(str(float(int(bbx_max*100000))/100000))    
-    node.parm("max_min_pos2").set(str(float(int(bbx_min*100000))/100000))
-    return bbx_max, bbx_min
-
-# -----------------------------------------------------------------------------
-#    Name: _pscale(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Sets value
-# -----------------------------------------------------------------------------
-
-def minmax_pscale(node):
-    node_bounds    = node.node("objects/data/OUT_max_min")
-    geo     = node_bounds.geometry()
-
-    #Represents the max bounds for pivot via the pivot.
-    pscale_max = geo.attribValue("pscale_max")
-
-    #Represents the min bounds for pivot via the pivot.
-    pscale_min  = geo.attribValue("pscale_min")
-
-    node.parm("max_min_scale1").set(str(float(int(pscale_max[0]*100000))/100000))
-    node.parm("max_min_scale2").set(str(float(int(pscale_min[0]*100000))/100000))
-    return pscale_max, pscale_min   
-
-# -----------------------------------------------------------------------------
-#    Name: _scale(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Sets value
-# -----------------------------------------------------------------------------
-
-def minmax_scale(node):
-    node_bounds    = node.node("objects/data/OUT_max_min")
-    geo     = node_bounds.geometry()
-
-    #Represents the max bounds for pivot via the pivot.
-    scale_max = geo.attribValue("scale_max")
-
-    #Represents the min bounds for pivot via the pivot.
-    scale_min  = geo.attribValue("scale_min")
-
-    node.parm("max_min_scale1").set(str(float(int(scale_max[0]*100000))/100000))
-    node.parm("max_min_scale2").set(str(float(int(scale_min[0]*100000))/100000))
-    return scale_max, scale_min   
-
-# -----------------------------------------------------------------------------
-#    Name: _pscale(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Sets value
-# -----------------------------------------------------------------------------
-
-def minmax_pivot(node):
-    node_bounds    = node.node("objects/data/OUT_max_min")
-    geo     = node_bounds.geometry()
-
-    #Represents the max bounds for pivot via the pivot.
-    pivot_max = geo.attribValue("pivot_max")
-
-    #Represents the min bounds for pivot via the pivot.
-    pivot_min  = geo.attribValue("pivot_min")
-
-    node.parm("max_min_scale1").set(str(float(int(scale_max[0]*100000))/100000))
-    node.parm("max_min_scale2").set(str(float(int(scale_min[0]*100000))/100000))
-    return pivot_max, pivot_min  
-
-# # -----------------------------------------------------------------------------
-# #    Name: _pscale(node)
-# #  Raises: N/A
-# # Returns: None
-# #    Desc: Sets value
-# # -----------------------------------------------------------------------------
-
-# def minmax_pos_single(node):
-#     try:
-#         #Unity engine conversion
-#         engine  = node.evalParm('engine')
-#         scale   = 1/node.evalParm('scale')
-
-#         node_bounds    = node.node("objects/data/OUT_min_max_bounds")
-#         geo     = node_bounds.geometry()
-
-#         bbox    = geo.boundingBox()
-
-#         min_vec = bbox.minvec()
-#         min_pos = min(min_vec)
-
-#         max_vec = bbox.maxvec()
-#         max_pos = max(max_vec)
-
-#         if engine == 'unity' :
-#             node.parm("max_min_pos1").set(str(float(int(max_pos*100000))/100000*scale))
-#             node.parm("max_min_pos2").set(str(float(int(min_pos*100000))/100000*scale))
-#         else:
-#             node.parm("max_min_pos1").set(str(float(int(max_pos*100000))/100000))    
-#             node.parm("max_min_pos2").set(str(float(int(min_pos*100000))/100000))
-#     except :
-#         return 
-
-
-# # -----------------------------------------------------------------------------
-# #    Name: _pscale(node)
-# #  Raises: N/A
-# # Returns: None
-# #    Desc: Sets value
-# # -----------------------------------------------------------------------------
-
-# def minmax_pos_multi(node):
-#     try:
-#         #Unity engine conversion
-#         engine  = node.evalParm('engine')
-#         scale   = 1/node.evalParm('scale')
-
-#         #Brightest pixel represents the max bounds for position.
-#         position_max = node.node("textures/normalize_position/max").getPixelByUV(plane="C",u=0,v=0, component="r")
-#         #print position_max
-#         #Darkest pixel represents the min bounds for position.
-#         position_min = node.node("textures/normalize_position/min").getPixelByUV(plane="C",u=0,v=0, component="r")
-#         #print position_min
-
-#         if engine == 'unity' :
-#             node.parm("max_min_pos1").set(str(float(int(position_max[0]*100000))/100000*scale))
-#             node.parm("max_min_pos2").set(str(float(int(position_min[0]*100000))/100000*scale))
-#         else:
-#             node.parm("max_min_pos1").set(str(float(int(position_max[0]*100000))/100000))    
-#             node.parm("max_min_pos2").set(str(float(int(position_min[0]*100000))/100000))
-#     except :
-#         return 
-
-
-# # -----------------------------------------------------------------------------
-# #    Name: _pscale(node)
-# #  Raises: N/A
-# # Returns: None
-# #    Desc: Sets value
-# # -----------------------------------------------------------------------------
-
-# def minmax_pivot(node):
-#     try:
-#         #Unity engine conversion
-#         engine  = node.evalParm('engine')
-#         scale   = 1/node.evalParm('scale')
-
-#         #Pivot geo
-#         node_bounds = node.node("objects/data/rigid/min_max_bounds")
-#         geo  = node_bounds.geometry()
-
-#         #Represents the max bounds for pivot via the pivot.
-#         pivot_max = geo.attribValue("pivot_max")
-
-#         #Represents the min bounds for pivot via the pivot.
-#         pivot_min  = geo.attribValue("pivot_min")
-
-
-#         if engine == 'unity' :
-#             node.parm("max_min_piv1").set(str(float(int(pivot_max*100000))/100000*scale))    
-#             node.parm("max_min_piv2").set(str(float(int(pivot_min*100000))/100000*scale))
-#         else:
-#             node.parm("max_min_piv1").set(str(float(int(pivot_max*100000))/100000))    
-#             node.parm("max_min_piv2").set(str(float(int(pivot_min*100000))/100000))
-#     except :
-#         return 
-
-
-# -----------------------------------------------------------------------------
-#    Name: _pscale(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Sets value
-# -----------------------------------------------------------------------------
-
-def minmax_frames(node):
-    try:
-        #Set frame range value.
-        node.parm('f1').deleteAllKeyframes()
-        node.parm('f2').deleteAllKeyframes()
-        f1  = node.evalParm('f1')
-        f2  = node.evalParm('f2')
-
-        num_frames = abs(f2-f1)
-        node.parm('num_frames').deleteAllKeyframes()
-        node.parm('num_frames').set(num_frames)
-
-        speed = hou.fps()/num_frames
-        node.parm('speed').deleteAllKeyframes()
-        node.parm('speed').set(speed)
-    except :
-        return 
-
-
-# -----------------------------------------------------------------------------
 #    Name: _debug_refresh(node)
 #  Raises: N/A
 # Returns: None
@@ -732,65 +867,38 @@ def minmax_frames(node):
 
 def debug_refresh(node):
     try:
-        node.node('objects/debug/MESH').parm('reload').pressButton()
+        node.node('debug/MESH').parm('reload').pressButton()
         hou.hscript("texcache -c")
     except :
         return 
 
 # -----------------------------------------------------------------------------
-#    Name: texture_size(node)
+#    Name: frame(node)
 #  Raises: N/A
 # Returns: None
 #    Desc: Sets value
-    #min(if(ch("wrap_data")==1,if(ch("m")==2,ch("../../target_texture_size"),min(ch("numpt"),ch("size_target"))),ch("numpt")),ch("size_max"))
-    #min(ch("frange") * if(ch("wrap_data")==1,ceil(if(ch("m")==2,detail(-2, "maxpoints", 0),ch("numpt"))/ch("size_target")),1),ch("size_max"))
 # -----------------------------------------------------------------------------
 
-def texture_size(node):
-    node_data           = node.node("objects/data/OUT_TextureData")
-    node_nmpt           = node.node("objects/data/OUT_max_min")
-    #node_mesh           = node.node("objects/data/OUT_Mesh")
-    geo                 = node_nmpt.geometry()
-    numpt               = float(geo.intAttribValue('npoints'))
-    maxpoints           = float(geo.intAttribValue('maxpoints'))
-    wrap_data           = node.evalParm('wrap_data')    
-    method              = node.evalParm('method')    
-    target_texture_size = float(node.evalParm('target_texture_size'))
-    size_target         = texture_size_target(node)
-    size_max            = 8192.0
-    f1                  = float(node.evalParm('f1'))
-    f2                  = float(node.evalParm('f2'))
-    frange              = f2-f1
+def frame(node):   
+    f1                  = node.evalParm('f1')
+    f2                  = node.evalParm('f2')
+    timeshift           = node.evalParm('timeshift')
+    frange              = abs(f2-f1)
+    frange_seq          = frange
+    frame_tex           = node.evalParm('frame_tex')
+    atlas_tex           = node.evalParm('atlas_tex')    
+    method              = node.evalParm('method')
+    speed               = float(node.evalParm('fps'))/float(frange)
 
-    size1 = numpt
-    size2 = 1.0      
-    if wrap_data == 1 :
-        size1 = min(numpt,target_texture_size)
-        size2 = math.ceil(numpt/size_target)        
-        if method == 2 :
-            size1 = target_texture_size
-            size2 = math.ceil(maxpoints/size_target)
+    f2_tex              = f1
+    if frame_tex == 1 and method == 2 :
+        f2_tex          = f2 
+    if (atlas_tex == 1) and (frame_tex == 1) and (method == 2) :
+        frange_seq      = 1 
+    if (timeshift == 1) and (frame_tex == 1) and (method == 2) :
+        f1          = 0
+        f2          = frange
+        f2_tex      = frange                
 
-    wrap = size2
+    return f1, f2, frange, f2_tex, speed, frange_seq
 
-    size2 *= frange
-    min(size1, size_max)
-    min(size2, size_max)
-    int(size1)
-    int(size2)
-    return size1, size2, wrap
-     
-# -----------------------------------------------------------------------------
-#    Name: size_target(node)
-#  Raises: N/A
-# Returns: None
-#    Desc: Sets value
-# if(ch("m")!=2, ch("../../target_texture_size"),(floor(ch("../../target_texture_size")/3)*3))
-# -----------------------------------------------------------------------------
-
-def texture_size_target(node):   
-    method              = node.evalParm('method')    
-    target_texture_size = float(node.evalParm('target_texture_size'))
-    size_target         = math.floor(target_texture_size/float(3.0))*float(3.0) if method==2 else target_texture_size
-
-    return size_target   
