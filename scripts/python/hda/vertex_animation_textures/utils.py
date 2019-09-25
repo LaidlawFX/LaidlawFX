@@ -65,18 +65,20 @@ def path_util(node,name,folder,ext,nameopt=None,component=None):
         if not component :
             component = pth.component(node)  
 
+
+        
         if ext is 'geometry' :            
             ext  = node.evalParm("ext_geometry")
             if ext == "" :
                 ext = '.fbx'
 
-        filelist    =['/',component,'_',name_ext,ext]                 
+        filelist    =['/',component,'_',name_ext,'_vat',ext]         
 
         if ext is 'texture' :
             ext  = node.evalParm("ext_texture")
             if ext == "" :
                 ext = '.exr'
-            filelist    =['/',component,'_',name_ext,ext]   
+            filelist    =['/',component,'_',name_ext,'_vat',ext]   
             if frame_tex == 1 and method == 2 :
                 frame          = '.'+str(hou.intFrame()).zfill(5) 
                 folder = "Resources/StreamingAssets/"+component
@@ -351,10 +353,36 @@ def oppath_geo_create(node):
     matnet_node.setColor(hou.Color( (0.0, 0.6, 1.0) ) )
     matnet_node.moveToGoodPosition()
 
-    mat_name                = pth.component(node) + '_mat'
-    mat_node                = matnet_node.createNode('materialbuilder', mat_name)          
+    mat_name                = pth.component(node) + '_mat_vat'
+    mat_node                = matnet_node.createNode('LaidlawFX::vertex_animation_textures::1.0', mat_name)          
     mat_node.setColor(hou.Color( (0.0, 0.6, 1.0) ) )
-    mat_node.moveToGoodPosition()    
+    mat_node.moveToGoodPosition()
+    mat_node.parm('_posTex').set(path_pos(node))
+    mat_node.parm('_rotTex').set(path_rot(node))
+    mat_node.parm('_scaleTex').set(path_scale(node))
+    mat_node.parm('_colTex').set(path_col(node))
+    mat_node.parm('_normTex').set(path_norm(node))
+    node_bounds   = node.node("data/OUT_max_min")
+    geo           = node_bounds.geometry()        
+    mat_node.parm('_numOfFrames').set(geo.attribValue("frange"))
+    mat_node.parm('_speed').set(geo.attribValue("speed"))
+    mat_node.parm('_posMax').set(geo.attribValue("bbx_max"))
+    mat_node.parm('_posMin').set(geo.attribValue("bbx_min"))
+    mat_node.parm('_scaleMax').set(geo.attribValue("scale_max"))
+    mat_node.parm('_scaleMin').set(geo.attribValue("scale_min"))
+    mat_node.parm('_pivMax').set(geo.attribValue("pivot_max"))
+    mat_node.parm('_pivMin').set(geo.attribValue("pivot_min"))
+    mat_node.parm('_doubleTex').set(node.evalParm('bitDepthPack'))
+    mat_node.parm('_padPowTwo').set(node.evalParm('padpowtwo'))
+    mat_node.parm('_textureSizeX').set(geo.attribValue("img_size1"))
+    mat_node.parm('_textureSizeY').set(geo.attribValue("img_size2"))
+    mat_node.parm('_paddedSizeX').set(geo.attribValue("pad_size1"))
+    mat_node.parm('_paddedSizeY').set(geo.attribValue("pad_size2"))        
+    mat_node.parm('_packNorm').set(node.evalParm('pack_norm'))
+    mat_node.parm('_packPscale').set(node.evalParm('pack_pscale'))
+    mat_node.parm('_normData').set(node.evalParm('normalize_data'))
+    mat_node.parm('_width').set(node.evalParm('width_height1'))
+    mat_node.parm('_height').set(node.evalParm('width_height2'))          
 
     mat_path                = node.evalParm("shop_materialpath")
     if mat_path :
@@ -372,10 +400,12 @@ def oppath_geo_create(node):
 def oppath_geo_delete(node):
     oppath, name, temp_subnet = oppath_geo(node) 
 
-    # delete temporary export subnet if it exist
-    export_node             = hou.node('/obj/'+temp_subnet)
-    if export_node != None :
-        export_node.destroy()
+    enable      = node.evalParm("enable_geo_debug")
+    if (enable == 0) :
+        # delete temporary export subnet if it exist
+        export_node             = hou.node('/obj/'+temp_subnet)
+        if export_node != None :
+            export_node.destroy()
 
 
 # File Checks/Updates/Creation
@@ -424,6 +454,34 @@ def method_str(node):
     return smethod
 
 # -----------------------------------------------------------------------------
+#    Name: unity_assetimporter(node)
+#  Raises: N/A
+# Returns: None
+#    Desc: Checks if material exist and creates it otherwise.
+# -----------------------------------------------------------------------------
+
+def unity_assetimporter(node):
+    engine = node.evalParm('engine') 
+    smethod = method_str(node)        
+    curdir      =os.path.dirname(os.path.realpath(__file__))
+    path_source =os.path.join(curdir,'engines',engine,'VAT_AssetImporter.cs')  
+
+    dirlist     =[project(node),'Editor']
+    filelist    =['/','VAT_AssetImporter.cs']     
+         
+    path        = pth.path_create(dirlist,filelist).replace("\\",'/')  
+    if not os.path.isfile(path) :
+        with open(path_source, 'r') as file:
+            data = file.read()  
+
+        directory = os.path.dirname(path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)   
+        with open(path,'w+') as f:
+            f.write(data)
+
+
+# -----------------------------------------------------------------------------
 #    Name: mat_check(node)
 #  Raises: N/A
 # Returns: None
@@ -446,6 +504,7 @@ def mat_check(node):
             os.makedirs(directory)   
         with open(path,'w+') as f:
             f.write(data)
+        mat_update(node)
     
 # -----------------------------------------------------------------------------
 #    Name: mat_update(node)
