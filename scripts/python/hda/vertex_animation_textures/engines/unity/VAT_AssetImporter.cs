@@ -10,14 +10,11 @@ using UnityEngine;
 using Directory = System.IO.Directory;
 
 internal sealed class VAT_AssetImporter : AssetPostprocessor {
-    /// <summary>
-    /// For our example character, limit the path to only be conan
-    /// </summary>
     private static readonly string _basePath = "Assets";
-
-    /// <summary>
-    /// returns the texture path relative to the base path
-    /// </summary>
+    private static string _baseString = "_mesh_vat";
+    private static string _assetName;
+    private static string _shaderName;
+    private static string _materialName;   
     private static string MeshPath   
     {
         get
@@ -25,19 +22,6 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
             return _basePath + "/Meshes";
         }
     }
-    /// <summary>
-    /// name of our base file to work on
-    /// </summary>
-    private static string _baseString = "_mesh_vat";
-
-    /// <summary>
-    /// the name of prefab being saved
-    /// </summary>
-    private static string _assetName;
-     
-    /// <summary>
-    /// returns the texture path relative to the base path
-    /// </summary>
     private static string TexturePath
     {
         get
@@ -45,9 +29,6 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
             return _basePath + "/Textures";
         }
     } 
-    /// <summary>
-    /// Returns the materials path relative to the base path
-    /// </summary>
     private static string MaterialsPath
     {
         get
@@ -55,9 +36,6 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
             return _basePath + "/Materials";
         }
     }
-    /// <summary>
-    /// Returns the materials path relative to the base path
-    /// </summary>
     private static string PrefabPath
     {
         get
@@ -65,48 +43,23 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
             return _basePath + "/Prefabs";
         }
     }    
-    // private static List<string> _materialFiles;
     private static List<string> baseMeshImports;
 
-    /// <summary>
-    /// returns the shader path relative to the base path
-    /// </summary>
-    // private static string ShaderPath = "Assets/Shaders";
- 
-    /// <summary>
-    /// Main material asset on disk
-    /// </summary>
     private static Material _mainMaterial;
     private static Material _oldMaterial;    
-    private static Material _newMaterial;
- 
-    /// <summary>
-    /// Names for texture maps
-    /// </summary>
-    // private static string posTex = "_pos_vat";
-    // private static string rotTex = "_rot_vat";
-    // private static string scaleTex = "_scale_vat";
-    // private static string normTex = "_norm_vat";
-    // private static string colTex = "_col_vat";
 
     #region Methods
 
     #region Pre Processors
 
     void OnPreprocessTexture() {
-       // Extract the filename from the path
-        var fileNameIndex = assetPath.LastIndexOf('/');
-        var fileName      = assetPath.Substring(fileNameIndex + 1);
-
-        // If the file name doesn't start with "tex" (e.g. texGrass.png) we won't change how it's imported, return
-        // note: You can add as many such elements and change all the below settings based on these strings. Use StartsWith, EndsWith, Contains etc.
-        //if (!fileName.EndsWith("_vat")) return;
-
         // Get a reference to the assetImporter which is contained in the class we've inherited from AssetPostProcessor
-        var importer = assetImporter as TextureImporter;
-        if (importer == null) return;
+        TextureImporter importer = assetImporter as TextureImporter;
+        if (importer == null) return;        
+        string        name      = importer.assetPath.ToLower();
+        if (!name.Contains("_vat")) return;
 
-        // note: Some global settings I use for all the platforms, feel free to move these into settings below if they differ per-platform for you
+        // note: Global settings for all the platforms
         importer.textureType        = TextureImporterType.Default;
         importer.textureShape       = TextureImporterShape.Texture2D;                
         importer.sRGBTexture        = false;
@@ -145,25 +98,25 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
         // Android
         tips.name           = "Android";
         importer.SetPlatformTextureSettings(tips);
-        // WebGL - Does not hangle RGBAHalf
+        // WebGL - Does not handle RGBAHalf
         // tips.name           = "WebGL";
         // importer.SetPlatformTextureSettings(tips);
-        // Android
+        // Windows Store Apps
         tips.name           = "Windows Store Apps";
         importer.SetPlatformTextureSettings(tips);  
-        // Android
+        // PS4
         tips.name           = "PS4";
         importer.SetPlatformTextureSettings(tips); 
-        // Android
+        // PSM
         tips.name           = "PSM";
         importer.SetPlatformTextureSettings(tips); 
-        // Android
+        // XboxOne
         tips.name           = "XboxOne";
         importer.SetPlatformTextureSettings(tips);  
-        // Android
+        // Nintendo 3DS
         tips.name           = "Nintendo 3DS";
         importer.SetPlatformTextureSettings(tips); 
-        // Android
+        // tvOS
         tips.name           = "tvOS";
         importer.SetPlatformTextureSettings(tips);                                       
 
@@ -171,15 +124,9 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
 
 
     void OnPreprocessModel() {
-        var fileNameIndex = assetPath.LastIndexOf('/');
-        var fileName      = assetPath.Substring(fileNameIndex + 1);
-
-        // If the file name doesn't start with "tex" (e.g. texGrass.png) we won't change how it's imported, return
-        // note: You can add as many such elements and change all the below settings based on these strings. Use StartsWith, EndsWith, Contains etc.
-        //if (!fileName.EndsWith("_vat")) return;
-
         ModelImporter importer  = assetImporter as ModelImporter;
         string        name      = importer.assetPath.ToLower();
+        if (!name.Contains("_vat")) return;
         string        extension = name.Substring(name.LastIndexOf(".")).ToLower();
         switch (extension) {
             case ".fbx":
@@ -204,7 +151,6 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
                 importer.importTangents     = ModelImporterTangents.None;
                 importer.swapUVChannels     = false;
                 importer.generateSecondaryUV = false;
-
                 // Rig
                 importer.animationType      = ModelImporterAnimationType.None;
                 // Animation
@@ -233,15 +179,7 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
 
     private void OnPostprocessModel(GameObject import) { }
 
-    //private void OnPostprocessMaterial(Material material) { }
-
-    /// <summary>
-    /// Runs after all assets are imported and creates any character meshes
-    /// </summary>
-    /// <param name="importedAssets"></param>
-    /// <param name="deletedAssets"></param>
-    /// <param name="movedAssets"></param>
-    /// <param name="movedFromAssetPaths"></param>
+    /// Runs after all assets are imported and creates assigned materials in prefabs
     static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets,
         string[] movedFromAssetPaths)
     {
@@ -250,9 +188,6 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
         //Pull out the assets inside the proper folders
         foreach (string importedAsset in importedAssets)
         {
-            //Debug.Log("Asset A");
-            //Debug.Log(importedAsset);
-            //Debug.Log(_baseString);
             if (!importedAsset.Contains(_basePath))
             {
                 return;
@@ -264,9 +199,7 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
             if (match.Success)
             {
                 //Add it to our import List
-                baseMeshImports.Add(importedAsset);
-                // Debug.Log(importedAsset);
-                // Debug.Log(_baseString);                
+                baseMeshImports.Add(importedAsset);              
             }
         }
  
@@ -281,16 +214,13 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
                 //Name the prefab without the _baseString so it clear what it is
                 _assetName = fileName.Replace(_baseString, "");
  
-                //Begin construction
+                //Iterable prefab construction method
                 ConstructPrefab(baseMaterial);
             }
         }
     }
 
-    /// <summary>
-    /// Initial call to create a character mesh. 
-    /// </summary>
-    /// <param name="importedFilePath"></param>
+    /// Initial call to construct prefab. 
     private static void ConstructPrefab(string importedFilePath)
     {
         //Load the asset from the project
@@ -299,10 +229,10 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
         //Instantiate the prefab in to the scene so we can start to work with it
         var instantiatedBaseMesh = GameObject.Instantiate(importedFile);
  
-        //5. Create a material file to contain the textures
+        // Rebuild the material with the textures
         CreateMaterial();
 
-        //8.Grab all the mesh objects and apply the new material to it.
+        // Grab the mesh objects and apply the new material to it.
         ApplyMaterialsToMesh(instantiatedBaseMesh);
  
         //Start putting the prefab together
@@ -310,16 +240,10 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
     }
 
 
-    /// <summary>
-    /// Sets the material on the asset.
-    /// </summary>
-    /// <param name="material"></param>
+    /// Rebuilds the material on the asset.
     public static void CreateMaterial()
     {
-        string materialName = _assetName + "_mat_vat.mat";
- 
         //clear out the main material in case it is filled in from previous import
-
         _mainMaterial = null;
  
         //Make sure the materials directoy exists before adding stuff to it
@@ -327,37 +251,57 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
         {
             Directory.CreateDirectory(MaterialsPath);
         }
- 
-        // Debug.Log(Directory.Exists(MaterialsPath));
- 
+                
         //Check all the files in the directory for the main material
         foreach(var file in Directory.GetFiles(MaterialsPath, "*.mat", SearchOption.TopDirectoryOnly))
-        {                
-            //compare strings an check for the materialname in the file
-            Match match = Regex.Match(file, materialName, RegexOptions.IgnoreCase);
+        {  
+            if (!file.Contains(_assetName)) continue;            
+            if (file.Contains("sft"))
+            {
+                _shaderName = "LaidlawFX/Soft";
+                _materialName = _assetName + "_sft_mat_vat.mat";
+            } 
+            else if (file.Contains("rgd"))
+            {
+                _shaderName = "LaidlawFX/Rigid";
+                _materialName = _assetName + "_rgd_mat_vat.mat";
+            }
+            else if (file.Contains("fld"))
+            {
+                _shaderName = "LaidlawFX/Fluid";
+                _materialName = _assetName + "_fld_mat_vat.mat";
+            } 
+            else 
+            {
+                _shaderName = "LaidlawFX/Sprite";
+                _materialName = _assetName + "_spr_mat_vat.mat";
+            } 
+
+            //compare strings and check for the materialname in the file
+            Match match = Regex.Match(file, _materialName, RegexOptions.IgnoreCase);
  
-            //If the file exists, set the main material variable with the project file
+            //If the file exists, set the old material variable with the project file
             if (match.Success)
             {
                 _oldMaterial = (Material)AssetDatabase.LoadAssetAtPath(file, typeof(Material));
-                // _newMaterial.CopyPropertiesFromMaterial(_oldMaterial);
             }
         }
 
         //create a new material
-        var tempMaterial = new Material(Shader.Find("LaidlawFX/Rigid"));
+        var tempMaterial = new Material(Shader.Find(_shaderName));
         string tempName = "temp_mat_vat.mat";
         //save material to the project directory
         AssetDatabase.CreateAsset(tempMaterial, Path.Combine(MaterialsPath, tempName));
 
         //load up the the new material and store it
         _mainMaterial = (Material)AssetDatabase.LoadAssetAtPath(Path.Combine(MaterialsPath, tempName), typeof(Material));
+        // copy the old material options to the new material
         _mainMaterial.CopyPropertiesFromMaterial(_oldMaterial);
-        AssetDatabase.DeleteAsset(Path.Combine(MaterialsPath, materialName));
-        AssetDatabase.RenameAsset(Path.Combine(MaterialsPath, tempName),materialName);        
-        //_mainMaterial.CopyPropertiesFromMaterial(_tempMaterial);
+        // destroy the old material
+        AssetDatabase.DeleteAsset(Path.Combine(MaterialsPath, _materialName));
+        // rename the new material
+        AssetDatabase.RenameAsset(Path.Combine(MaterialsPath, tempName),_materialName);        
 
-        // }
         //Grab the position texture if it exists
         string texturePath = GetFilesPathNotMeta(TexturePath, _assetName + "_pos_vat"); 
  
@@ -409,22 +353,16 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
         }        
     }  
 
-    /// <summary>
-    /// Applys the material to all meshes in the prefab
-    /// Doesnt allow for multiple meshes or materials
-    /// </summary>
+    // Applys the material to the mesh in the prefab
     private static void ApplyMaterialsToMesh(GameObject baseMesh)
     {
         foreach (var mesh in baseMesh.GetComponentsInChildren<Renderer>())
         {
             mesh.sharedMaterial = _mainMaterial;
-        }
+        }        
     }
  
-    /// <summary>
     /// Creates a prefab with materials 
-    /// </summary>
-    /// <param name="assetPrefab"></param>
     private static void CreatePrefab(GameObject assetPrefab)
     {
         Selection.activeGameObject = assetPrefab;
@@ -432,7 +370,7 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
         //Set the name of the object to be the prefab name
         assetPrefab.name = _assetName;
         
-        //12. Save\Create the prefab in the project hierarchy
+        //Save\Create the prefab in the project hierarchy
         var folder = Directory.CreateDirectory(PrefabPath); 
         string prefabSavePath = string.Format("{0}/Prefabs/{1}_PF.prefab", _basePath, _assetName);
         PrefabUtility.SaveAsPrefabAsset(assetPrefab,prefabSavePath);
@@ -440,12 +378,7 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
         GameObject.DestroyImmediate(assetPrefab);
     }
 
-    /// <summary>
-    /// Return the raw fbx file, not a meta file
-    /// </summary>
-    /// <param name="filePath">Root Directory to start with</param>
-    /// <param name="searchString"> string to search in the file path</param>
-    /// <returns></returns>
+    // Return the raw fbx file, not a meta file
     private static string GetFilesPathNotMeta(string filePath, string searchString)
     {
         return Directory.GetFiles(filePath).FirstOrDefault(

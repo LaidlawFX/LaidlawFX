@@ -220,8 +220,10 @@ def path_uv(node):
 # -----------------------------------------------------------------------------
 
 def path_mat(node):
+    nameopt = method_str(node)[1]
+    nameopt += "_mat"
     ext = '.mat' 
-    path = path_util(node,"mat","Materials",ext)  
+    path = path_util(node,"mat","Materials",ext,nameopt)  
     return path     
 
 # -----------------------------------------------------------------------------
@@ -246,7 +248,7 @@ def path_data(node):
 # -----------------------------------------------------------------------------
 
 def path_shader(node):
-    smethod = method_str(node)   
+    smethod = method_str(node)[0]   
     ext = '.shader'
     path = path_util(node,"shader","Shaders",ext,"vertex",smethod)  
     return path  
@@ -421,7 +423,7 @@ def shader(node):
     path = path_shader(node)
     if not os.path.isfile(path) :
         engine = node.evalParm('engine') 
-        smethod = method_str(node)           
+        smethod = method_str(node)[0]           
         curdir      =os.path.dirname(os.path.realpath(__file__))
         path_source =os.path.join(curdir,'engines',engine,smethod +'.shader')  
 
@@ -445,13 +447,17 @@ def method_str(node):
     method = node.evalParm('method')
     if   method == 0:
         smethod = 'soft'
+        short   = 'sft'
     elif method == 1:
-        smethod = 'rigid'   
+        smethod = 'rigid'
+        short   = 'rgd'           
     elif method == 2:
-        smethod = 'fluid' 
+        smethod = 'fluid'
+        short   = 'fld'         
     elif method == 3:
-        smethod = 'sprite'  
-    return smethod
+        smethod = 'sprite'
+        short   = 'spr'          
+    return smethod, short
 
 # -----------------------------------------------------------------------------
 #    Name: unity_assetimporter(node)
@@ -462,7 +468,7 @@ def method_str(node):
 
 def unity_assetimporter(node):
     engine = node.evalParm('engine') 
-    smethod = method_str(node)        
+    smethod = method_str(node)[0]        
     curdir      =os.path.dirname(os.path.realpath(__file__))
     path_source =os.path.join(curdir,'engines',engine,'VAT_AssetImporter.cs')  
 
@@ -492,7 +498,7 @@ def mat_check(node):
     path = path_mat(node)
     if not os.path.isfile(path) :
         engine = node.evalParm('engine') 
-        smethod = method_str(node)        
+        smethod = method_str(node)[0]        
         curdir      =os.path.dirname(os.path.realpath(__file__))
         path_source =os.path.join(curdir,'engines',engine,smethod +'.mat')  
 
@@ -685,7 +691,8 @@ def data(node):
     _packPscale  = str(node.evalParm('pack_pscale'))
     _normData    = str(node.evalParm('normalize_data'))
     _width       = str(node.evalParm('width_height1'))
-    _height      = str(node.evalParm('width_height2'))        
+    _height      = str(node.evalParm('width_height2'))
+    _method      = str(node.evalParm('method'))        
        
     data = {}  
     data[component] = []  
@@ -708,7 +715,8 @@ def data(node):
         '_packPscale'   : _packPscale,
         '_normData'     : _normData,
         '_width'        : _width,
-        '_height'       : _height         
+        '_height'       : _height,
+        '_method'       : _method 
     })
     try:
         #print path
