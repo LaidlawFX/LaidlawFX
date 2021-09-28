@@ -63,16 +63,12 @@ def path_util(node,name,folder,ext,nameopt=None,component=None):
             name_ext = name
 
         if not component :
-            component = pth.component(node)  
-
-
-        
-        if ext is 'geometry' :            
-            ext  = node.evalParm("ext_geometry")
-            if ext == "" :
-                ext = '.fbx'
+            component = pth.component(node)             
 
         filelist    =['/',component,'_',name_ext,'_vat',ext]         
+
+        if ext is '.shader' :            
+            filelist    =['/',component,'_vat',ext]
 
         if ext is 'texture' :
             ext  = node.evalParm("ext_texture")
@@ -114,7 +110,10 @@ def path_atlas(node):
 # -----------------------------------------------------------------------------
 
 def path_geo(node):
-    ext = 'geometry'   
+    # ext = 'geometry' 
+    ext  = node.evalParm("ext_geometry")
+    if ext == "" :
+        ext = '.fbx'      
     path = path_util(node,"geo","Meshes",ext,"mesh")  
     return path              
 
@@ -248,9 +247,9 @@ def path_data(node):
 # -----------------------------------------------------------------------------
 
 def path_shader(node):
-    smethod = method_str(node)[0]   
+    smethod = method_str(node)[1]   
     ext = '.shader'
-    path = path_util(node,"shader","Shaders",ext,"vertex",smethod)  
+    path = path_util(node,"shader","Shaders",ext,"",smethod)  
     return path  
 
 # -----------------------------------------------------------------------------
@@ -288,19 +287,65 @@ def channel_comp(node):
 # -----------------------------------------------------------------------------
 
 def oppath_geo(node):
-    name        = 'MESH'
-    enable      = node.evalParm("enable_name")
-    name_parm   = node.evalParm("name")
+    name            = 'MESH'
+    enable          = node.evalParm("enable_name")
+    name_parm       = node.evalParm("name")
     if (enable == 1) and (name_parm != '') :
-        name = re.sub('[. ]','',name_parm)
+        name        = re.sub('[. ]','',name_parm)
         
-    node_path               = node.path()
-    node_name               = node_path.replace('/', '')
-    temp_subnet             = '_temp_vat_'+node_name
-    export_node             = '/obj/'+temp_subnet     
-    oppath                  = export_node +'/' + name
+    node_path       = node.path()
+    node_name       = node_path.replace('/', '')
+    temp_subnet     = '_temp_vat_'+node_name
+    export_node     = '/obj/'+temp_subnet     
+    oppath          = export_node +'/' + name
  
     return oppath, name, temp_subnet 
+
+
+# -----------------------------------------------------------------------------
+#    Name: vat_attributes(node)
+#  Raises: N/A
+# Returns: Dictionary of attributes
+#    Desc: Build dictionary of all attributes
+# -----------------------------------------------------------------------------
+#
+
+def vat_attributes(node):
+    component       = pth.component(node) 
+    node_bounds     = node.node("data/OUT_max_min")
+    geo             = node_bounds.geometry()
+    data            = {} 
+    data['_posTex']         = path_pos(node)
+    data['_rotTex']         = path_rot(node)
+    data['_scaleTex']       = path_scale(node)
+    data['_colTex']         = path_col(node)
+    data['_normTex']        = path_norm(node)
+    data['_uvTex']          = path_uv(node)  
+    data['_matTex']         = path_mat(node)  
+    data['_shaderTex']      = path_shader(node)
+    data['_dataTex']        = path_data(node)                     
+    data['_numOfFrames']    = str(geo.attribValue("frange"))
+    data['_speed']          = str(geo.attribValue("speed"))
+    data['_posMax']         = str(geo.attribValue("bbx_max"))
+    data['_posMin']         = str(geo.attribValue("bbx_min"))
+    data['_scaleMax']       = str(geo.attribValue("scale_max"))
+    data['_scaleMin']       = str(geo.attribValue("scale_min"))
+    data['_pivMax']         = str(geo.attribValue("pivot_max"))
+    data['_pivMin']         = str(geo.attribValue("pivot_min"))           
+    data['_textureSizeX']   = str(geo.attribValue("img_size1"))
+    data['_textureSizeY']   = str(geo.attribValue("img_size2"))
+    data['_paddedSizeX']    = str(geo.attribValue("pad_size1"))
+    data['_paddedSizeY']    = str(geo.attribValue("pad_size2"))  
+    data['_packNorm']       = str(geo.attribValue("pack_norm"))     
+    data['_packPscale']     = str(geo.attribValue("pack_pscale"))
+    data['_normData']       = str(geo.attribValue("normalize_data"))
+    data['_doubleTex']      = str(geo.attribValue("bitDepthPack"))
+    data['_padPowTwo']      = str(geo.attribValue("padpowtwo"))     
+    data['_width']          = str(geo.attribValue("width_height1"))
+    data['_height']         = str(geo.attribValue("width_height2"))
+    data['_method']         = str(geo.attribValue("method"))        
+        
+    return data     
 
 # -----------------------------------------------------------------------------
 #    Name: oppath_geo_create(node)
@@ -311,7 +356,13 @@ def oppath_geo(node):
 #
 
 def oppath_geo_create(node):
-    oppath, name, temp_subnet = oppath_geo(node) 
+    oppath, name, temp_subnet = oppath_geo(node)
+    data = vat_attributes(node)    
+    #path_list = ["_posTex","_rotTex","_scaleTex","_colTex","_normTex","_uvTex","_matTex","_shaderTex","_dataTex"]
+    path_list = ["_uvTex","_matTex","_shaderTex","_dataTex","_method"]   
+    for key in data.keys():
+        if key in path_list:
+            del data[key]    
 
     # delete temporary export subnet if it exist
     export_node             = hou.node('/obj/'+temp_subnet)
@@ -328,18 +379,28 @@ def oppath_geo_create(node):
     fbx_node.setColor(hou.Color( (0.0, 0.6, 1.0) ) )
     fbx_node.moveToGoodPosition()
 
-    fbx_node.parm('tx').set(node.evalParm("tx")) 
-    fbx_node.parm('ty').set(node.evalParm("ty")) 
-    fbx_node.parm('tz').set(node.evalParm("tz"))
+    scene_scale = node.evalParm('scale')
+    scale_max_min = node.evalParm('scale_max_min')
+    if scale_max_min == 0 :
+        scene_scale = 1
+
+    fbx_node.parm('tx').set(node.evalParm("tx")*scene_scale) 
+    fbx_node.parm('ty').set(node.evalParm("ty")*scene_scale) 
+    fbx_node.parm('tz').set(node.evalParm("tz")*scene_scale)
     fbx_node.parm('sx').set(node.evalParm("sx")) 
     fbx_node.parm('sy').set(node.evalParm("sy")) 
     fbx_node.parm('sz').set(node.evalParm("sz")) 
     fbx_node.parm('rx').set(node.evalParm("rx")) 
     fbx_node.parm('ry').set(node.evalParm("ry")) 
     fbx_node.parm('rz').set(node.evalParm("rz")) 
-    fbx_node.parm('px').set(node.evalParm("px")) 
-    fbx_node.parm('py').set(node.evalParm("py")) 
-    fbx_node.parm('pz').set(node.evalParm("pz"))         
+    fbx_node.parm('px').set(node.evalParm("px")*scene_scale) 
+    fbx_node.parm('py').set(node.evalParm("py")*scene_scale) 
+    fbx_node.parm('pz').set(node.evalParm("pz")*scene_scale) 
+
+    for key, value in data.items():
+        parm = "fbx_"+key
+        fbx_node_Template    = hou.StringParmTemplate(parm, parm, 1, default_value=([value]), naming_scheme=hou.parmNamingScheme.Base1, string_type=hou.stringParmType.NodeReference, menu_items=([]), menu_labels=([]), icon_names=([]), item_generator_script="", item_generator_script_language=hou.scriptLanguage.Python, menu_type=hou.menuType.Normal)
+        fbx_node.addSpareParmTuple(fbx_node_Template)              
 
     # import the mesh data 
     fbx_node_import         = fbx_node.createNode('object_merge','Import') 
@@ -359,32 +420,9 @@ def oppath_geo_create(node):
     mat_node                = matnet_node.createNode('LaidlawFX::vertex_animation_textures::1.0', mat_name)          
     mat_node.setColor(hou.Color( (0.0, 0.6, 1.0) ) )
     mat_node.moveToGoodPosition()
-    mat_node.parm('_posTex').set(path_pos(node))
-    mat_node.parm('_rotTex').set(path_rot(node))
-    mat_node.parm('_scaleTex').set(path_scale(node))
-    mat_node.parm('_colTex').set(path_col(node))
-    mat_node.parm('_normTex').set(path_norm(node))
-    node_bounds   = node.node("data/OUT_max_min")
-    geo           = node_bounds.geometry()        
-    mat_node.parm('_numOfFrames').set(geo.attribValue("frange"))
-    mat_node.parm('_speed').set(geo.attribValue("speed"))
-    mat_node.parm('_posMax').set(geo.attribValue("bbx_max"))
-    mat_node.parm('_posMin').set(geo.attribValue("bbx_min"))
-    mat_node.parm('_scaleMax').set(geo.attribValue("scale_max"))
-    mat_node.parm('_scaleMin').set(geo.attribValue("scale_min"))
-    mat_node.parm('_pivMax').set(geo.attribValue("pivot_max"))
-    mat_node.parm('_pivMin').set(geo.attribValue("pivot_min"))
-    mat_node.parm('_doubleTex').set(node.evalParm('bitDepthPack'))
-    mat_node.parm('_padPowTwo').set(node.evalParm('padpowtwo'))
-    mat_node.parm('_textureSizeX').set(geo.attribValue("img_size1"))
-    mat_node.parm('_textureSizeY').set(geo.attribValue("img_size2"))
-    mat_node.parm('_paddedSizeX').set(geo.attribValue("pad_size1"))
-    mat_node.parm('_paddedSizeY').set(geo.attribValue("pad_size2"))        
-    mat_node.parm('_packNorm').set(node.evalParm('pack_norm'))
-    mat_node.parm('_packPscale').set(node.evalParm('pack_pscale'))
-    mat_node.parm('_normData').set(node.evalParm('normalize_data'))
-    mat_node.parm('_width').set(node.evalParm('width_height1'))
-    mat_node.parm('_height').set(node.evalParm('width_height2'))          
+  
+    for key, value in data.items():
+        mat_node.parm(key).set(value)        
 
     mat_path                = node.evalParm("shop_materialpath")
     if mat_path :
@@ -536,17 +574,17 @@ def mat_update(node):
         _scaleMin    = str(geo.attribValue("scale_min"))
         _pivMax      = str(geo.attribValue("pivot_max"))
         _pivMin      = str(geo.attribValue("pivot_min"))
-        _doubleTex   = str(node.evalParm('bitDepthPack'))
-        _padPowTwo   = str(node.evalParm('padpowtwo'))
+        _doubleTex   = str(geo.attribValue("bitDepthPack"))
+        _padPowTwo   = str(geo.attribValue("padpowtwo"))
         _textureSizeX= str(geo.attribValue("img_size1"))
         _textureSizeY= str(geo.attribValue("img_size2"))
         _paddedSizeX = str(geo.attribValue("pad_size1"))
         _paddedSizeY = str(geo.attribValue("pad_size2"))        
-        _packNorm    = str(node.evalParm('pack_norm'))
-        _packPscale  = str(node.evalParm('pack_pscale'))
-        _normData    = str(node.evalParm('normalize_data'))
-        _width       = str(node.evalParm('width_height1'))
-        _height      = str(node.evalParm('width_height2'))      
+        _packNorm    = str(geo.attribValue("pack_norm"))  
+        _packPscale  = str(geo.attribValue("pack_pscale"))
+        _normData    = str(geo.attribValue("normalize_data"))
+        _width       = str(geo.attribValue("width_height1"))
+        _height      = str(geo.attribValue("width_height2"))           
         
         numOfFrames  = -1
         speed        = -1
@@ -611,44 +649,44 @@ def mat_update(node):
 
         list = open(path).readlines()
         if "_numOfFrames" != -1 :
-            list[numOfFrames-1] = '    - _numOfFrames: '+_numOfFrames+'\n'
+            list[numOfFrames-1] = '    - _numOfFrames: ' +_numOfFrames+'\n'
         if "_speed"       != -1 :    
-            list[speed-1]       = '    - _speed: '      +_speed+'\n'
+            list[speed-1]       = '    - _speed: '       +_speed+'\n'
         if "_posMax"      != -1 :    
-            list[posMax-1]      = '    - _posMax: '     +_posMax+'\n'
+            list[posMax-1]      = '    - _posMax: '      +_posMax+'\n'
         if "_posMin"      != -1 :    
-            list[posMin-1]      = '    - _posMin: '     +_posMin+'\n'
+            list[posMin-1]      = '    - _posMin: '      +_posMin+'\n'
         if "_scaleMax"    != -1 :   
-            list[scaleMax-1]    = '    - _scaleMax: '   +_scaleMax+'\n'
+            list[scaleMax-1]    = '    - _scaleMax: '    +_scaleMax+'\n'
         if "_scaleMin"    != -1 :  
-            list[scaleMin-1]    = '    - _scaleMin: '   +_scaleMin+'\n'
+            list[scaleMin-1]    = '    - _scaleMin: '    +_scaleMin+'\n'
         if "_pivMax"      != -1 :   
-            list[pivMax-1]      = '    - _pivMax: '     +_pivMax+'\n'
+            list[pivMax-1]      = '    - _pivMax: '      +_pivMax+'\n'
         if "_pivMin"      != -1 :  
-            list[pivMin-1]      = '    - _pivMin: '     +_pivMin+'\n'
+            list[pivMin-1]      = '    - _pivMin: '      +_pivMin+'\n'
         if "_packNorm"    != -1 :  
-            list[packNorm-1]    = '    - _packNorm: '   +_packNorm+'\n'
-        if "_doubleTex"    != -1 :  
-            list[doubleTex-1]    = '    - _doubleTex: '   +_doubleTex+'\n'
-        if "_padPowTwo"    != -1 :  
-            list[padPowTwo-1]    = '    - _padPowTwo: '   +_padPowTwo+'\n'
-        if "_textureSizeX"    != -1 :  
-            list[textureSizeX-1] = '    - _textureSizeX: '   +_textureSizeX+'\n'
-        if "_textureSizeY"    != -1 :  
-            list[textureSizeY-1] = '    - _textureSizeY: '   +_textureSizeY+'\n'
-        if "_paddedSizeX"    != -1 :  
-            list[paddedSizeX-1] = '    - _paddedSizeX: '   +_paddedSizeX+'\n'
-        if "_paddedSizeY"    != -1 :  
-            list[paddedSizeY-1] = '    - _paddedSizeY: '   +_paddedSizeY+'\n'            
+            list[packNorm-1]    = '    - _packNorm: '    +_packNorm+'\n'
+        if "_doubleTex"   != -1 :  
+            list[doubleTex-1]   = '    - _doubleTex: '   +_doubleTex+'\n'
+        if "_padPowTwo"   != -1 :  
+            list[padPowTwo-1]   = '    - _padPowTwo: '   +_padPowTwo+'\n'
+        if "_textureSizeX"!= -1 :  
+            list[textureSizeX-1]= '    - _textureSizeX: '+_textureSizeX+'\n'
+        if "_textureSizeY"!= -1 :  
+            list[textureSizeY-1]= '    - _textureSizeY: '+_textureSizeY+'\n'
+        if "_paddedSizeX" != -1 :  
+            list[paddedSizeX-1] = '    - _paddedSizeX: ' +_paddedSizeX+'\n'
+        if "_paddedSizeY" != -1 :  
+            list[paddedSizeY-1] = '    - _paddedSizeY: ' +_paddedSizeY+'\n'            
         if "_packPscale"  != -1 :    
-            list[packPscale-1]  = '    - _packPscale: ' +_packPscale+'\n'
+            list[packPscale-1]  = '    - _packPscale: '  +_packPscale+'\n'
         if "_normData"    != -1 :    
-            list[normData-1]    = '    - _normData: '   +_normData+'\n'
+            list[normData-1]    = '    - _normData: '    +_normData+'\n'
         if "_width"      != -1 :   
-            list[width-1]       = '    - _width: '      +_width+'\n'
+            list[width-1]       = '    - _width: '       +_width+'\n'
         if "_height"      != -1 :  
-            list[height-1]      = '    - _height: '     +_height+'\n'            
-        open(path,'w').write(''.join(list))       
+            list[height-1]      = '    - _height: '      +_height+'\n'            
+        open(path,'w').write(''.join(list))      
 
 
 # -----------------------------------------------------------------------------
@@ -670,54 +708,9 @@ def data(node):
     #create directory if it does not exist    
     if not os.path.exists(directory):
         os.makedirs(directory)
-    component    = pth.component(node) 
-    node_bounds   = node.node("data/OUT_max_min")
-    geo           = node_bounds.geometry()        
-    _numOfFrames = str(geo.attribValue("frange"))
-    _speed       = str(geo.attribValue("speed"))
-    _posMax      = str(geo.attribValue("bbx_max"))
-    _posMin      = str(geo.attribValue("bbx_min"))
-    _scaleMax    = str(geo.attribValue("scale_max"))
-    _scaleMin    = str(geo.attribValue("scale_min"))
-    _pivMax      = str(geo.attribValue("pivot_max"))
-    _pivMin      = str(geo.attribValue("pivot_min"))           
-    _packNorm    = str(node.evalParm('pack_norm'))
-    _doubleTex   = str(node.evalParm('bitDepthPack'))
-    _padPowTwo   = str(node.evalParm('padpowtwo'))
-    _textureSizeX= str(geo.attribValue("img_size1"))
-    _textureSizeY= str(geo.attribValue("img_size2"))
-    _paddedSizeX = str(geo.attribValue("pad_size1"))
-    _paddedSizeY = str(geo.attribValue("pad_size2"))    
-    _packPscale  = str(node.evalParm('pack_pscale'))
-    _normData    = str(node.evalParm('normalize_data'))
-    _width       = str(node.evalParm('width_height1'))
-    _height      = str(node.evalParm('width_height2'))
-    _method      = str(node.evalParm('method'))        
-       
-    data = {}  
-    data[component] = []  
-    data[component].append({ 
-        '_numOfFrames'  : _numOfFrames,
-        '_speed'        : _speed,
-        '_posMax'       : _posMax,
-        '_posMin'       : _posMin,
-        '_scaleMax'     : _scaleMax,
-        '_scaleMin'     : _scaleMin,
-        '_pivMax'       : _pivMax,
-        '_pivMin'       : _pivMin,
-        '_packNorm'     : _packNorm,
-        '_doubleTex'    : _doubleTex,
-        '_padPowTwo'    : _padPowTwo,
-        '_textureSizeX' : _textureSizeX,
-        '_textureSizeY' : _textureSizeY,
-        '_paddedSizeX'  : _paddedSizeX,
-        '_paddedSizeY'  : _paddedSizeY,        
-        '_packPscale'   : _packPscale,
-        '_normData'     : _normData,
-        '_width'        : _width,
-        '_height'       : _height,
-        '_method'       : _method 
-    })
+          
+    data = vat_attributes(node)  
+
     try:
         #print path
         with open(path, 'w') as f:  
