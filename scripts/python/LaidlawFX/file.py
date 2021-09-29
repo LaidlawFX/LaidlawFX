@@ -31,7 +31,7 @@ def load(node, geo, path):
         except hou.GeometryPermissionError:
             print("Permissions Issue, are the files locked?")        
     except (KeyboardInterrupt, SystemExit):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return      
         
 # -----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ def write(node, geo, path):
         except hou.OperationFailed:
             print("Could not write: " + path)         
     except (KeyboardInterrupt, SystemExit):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return
         
 # -----------------------------------------------------------------------------
@@ -101,7 +101,7 @@ def read(node, geo, child, type):
                     g_dataList          = get_tile_num.attribValue("dataList")
                     g_dataList          = [str("x" + t.replace("_", "_y")) for t in g_dataList.split(',')]
                 except:
-                    print "No Data List...exiting"
+                    print("No Data List...exiting")
                     return 
     
                 if not g_dataList:
@@ -146,7 +146,7 @@ def read(node, geo, child, type):
             node.hm().file.load(node, geo, file)  
             
     except (KeyboardInterrupt, SystemExit):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return      
 # -----------------------------------------------------------------------------
 #    Name: readPattern(node, geo, child, type)
@@ -272,7 +272,7 @@ def readPattern(node, geo, child, type):
             print("Path error: " + filePath)
             
     except (KeyboardInterrupt, SystemExit):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return
 # -----------------------------------------------------------------------------
 #    Name: readSingle(node, geo, type)
@@ -296,7 +296,7 @@ def readSingle(node, geo, type):
         node.hm().file.load(node, geo, filePath)    
         
     except (KeyboardInterrupt, SystemExit):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return
 # -----------------------------------------------------------------------------
 #    Name: readSinglePattern(node, geo, type)
@@ -347,5 +347,5 @@ def readSinglePattern(node, geo, type):
             node.hm().file.load(node, geo, file) 
             
     except (KeyboardInterrupt, SystemExit):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return            

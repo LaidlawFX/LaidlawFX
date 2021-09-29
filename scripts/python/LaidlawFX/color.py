@@ -6,7 +6,7 @@
 
 import hou
 import inspect
-import exceptions
+#import exceptions
 
 # =============================================================================
 # FUNCTIONS
@@ -33,7 +33,7 @@ def brighten(node):
             node.parmTuple('nodeColor').set((0.0, 0.6, 1.0))
             node.setColor(hou.Color((0.0, 0.6, 1.0)))
     except (KeyboardInterrupt, SystemExit):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return
 
 
@@ -81,5 +81,5 @@ def change(node):
 
                
     except (KeyboardInterrupt, SystemExit):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return        

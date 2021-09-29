@@ -86,7 +86,7 @@ def render(kwargs, i):
                     log.node(node, 1, 'No button type "' + str(ropcommand) + '" on node ' + str(ropparm.path()))                     
                     return                    
                 #else :
-                #    print "No Rop button specified to process."
+                #    print("No Rop button specified to process.")
             else :
                 ropcommand = node.evalParm('command'+str(i))
             ropenable = node.evalParm('enableQue'+str(i))

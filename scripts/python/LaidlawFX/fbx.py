@@ -4,7 +4,7 @@
 
 import hou
 import inspect
-import exceptions
+#import exceptions
 import datetime
 import sys
 
@@ -75,11 +75,11 @@ def execute(node):
         tolTime = endTime - begTime
         
         if eVil >= 1 :
-            print "End    Time of Obj Creation: " + str(endTime)
-            print "Total  Time of Obj Creation: " + str(tolTime) 
+            print("End    Time of Obj Creation: " + str(endTime))
+            print("Total  Time of Obj Creation: " + str(tolTime))
             
     except (KeyboardInterrupt):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return
     except (SystemExit):
         return
@@ -101,7 +101,7 @@ def clear(node):
             child.destroy()
             
     except (KeyboardInterrupt):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return
     except (SystemExit):
         return            

@@ -356,11 +356,13 @@ def vat_attributes(node):
 #
 
 def oppath_geo_create(node):
+    smethod = method_str(node)[1] 
     oppath, name, temp_subnet = oppath_geo(node)
     data = vat_attributes(node)    
     #path_list = ["_posTex","_rotTex","_scaleTex","_colTex","_normTex","_uvTex","_matTex","_shaderTex","_dataTex"]
-    path_list = ["_uvTex","_matTex","_shaderTex","_dataTex","_method"]   
-    for key in data.keys():
+    path_list = ["_uvTex","_matTex","_shaderTex","_dataTex","_method"]
+    #for key in list(data):   
+    for key in data.copy().keys():
         if key in path_list:
             del data[key]    
 
@@ -416,7 +418,7 @@ def oppath_geo_create(node):
     matnet_node.setColor(hou.Color( (0.0, 0.6, 1.0) ) )
     matnet_node.moveToGoodPosition()
 
-    mat_name                = pth.component(node) + '_mat_vat'
+    mat_name                = pth.component(node) +'_'+smethod +'_mat_vat'
     mat_node                = matnet_node.createNode('LaidlawFX::vertex_animation_textures::1.0', mat_name)          
     mat_node.setColor(hou.Color( (0.0, 0.6, 1.0) ) )
     mat_node.moveToGoodPosition()
@@ -558,9 +560,9 @@ def mat_check(node):
 # -----------------------------------------------------------------------------
 
 def mat_update(node):
-    #print 'Updating Material'
+    #print('Updating Material')
     path = path_mat(node) 
-    # print path
+    # print(path)
     if not os.path.isfile(path) :
         mat_check(node)
     else :
@@ -697,7 +699,7 @@ def mat_update(node):
 # -----------------------------------------------------------------------------
 
 def data(node):
-    #print 'Updating Json'
+    #print('Updating Json')
     path            = path_data(node)
     directory       = os.path.dirname(path)
     #remove file if exist
@@ -712,11 +714,11 @@ def data(node):
     data = vat_attributes(node)  
 
     try:
-        #print path
+        #print(path)
         with open(path, 'w') as f:  
             json.dump(data, f, indent=4, sort_keys=True)
     except :
-        print "Did not write realtime data."
+        print("Did not write realtime data.")
         return   
 
 # UI Presets
@@ -739,7 +741,7 @@ def preset(node):
     module += '.preset'
     module_check = pkgutil.find_loader(module)
     if module_check is not None :
-        #print module
+        #print(module)
         preset = importlib.import_module(module)
         preset.preset(node,method)
 
@@ -760,10 +762,10 @@ def preset_path(node):
     module_check = pkgutil.find_loader(module)
     path =  None
     if module_check is not None :
-        #print module
+        #print(module)
         preset = importlib.import_module(module)
         path = os.path.abspath(preset.__file__)
-    print path
+    print(path)
     return path
 
 # -----------------------------------------------------------------------------
@@ -818,7 +820,7 @@ def reset(node):
 
 def primcount(node):
     polyNode    = node.node("data/IN")
-    print polyNode.path()
+    print(polyNode.path())
     geo         = polyNode.geometry()
     count       = geo.countPrimType('Poly')
 
@@ -834,7 +836,7 @@ def primcount(node):
 # -----------------------------------------------------------------------------
 
 def _depth(node):
-    #print node.path()
+    #print(node.path())
     depth       = node.evalParm('depth')
     usebwpoints = node.evalParm('usebwpoints')
     
@@ -875,7 +877,7 @@ def _depth(node):
 # -----------------------------------------------------------------------------
 
 def _depth_uv(node):
-    #print node.path()
+    #print(node.path())
     depth       = node.evalParm('depth_uv')
     
     ntype = 6

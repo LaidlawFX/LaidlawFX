@@ -18,7 +18,7 @@ import json
 # -----------------------------------------------------------------------------
 
 def data(node):
-    #print 'Updating Json'
+    #print('Updating Json')
     path            = os.path.abspath(node.evalParm('path_data'))
     directory       = os.path.dirname(path)
     #remove file if exist
@@ -109,7 +109,7 @@ def primcount(node):
 # -----------------------------------------------------------------------------
 
 def _depth(node):
-    #print node.path()
+    #print(node.path())
     depth       = node.evalParm('depth')
     usebwpoints = node.evalParm('usebwpoints')
     
@@ -218,7 +218,7 @@ def mat_check(node):
 # -----------------------------------------------------------------------------
 
 def mat_update(node):
-    #print 'Updating Material'
+    #print('Updating Material')
     path = os.path.abspath(node.evalParm('path_mat'))  
     if os.path.isfile(path) :
         engine       = str(node.evalParm('engine'))

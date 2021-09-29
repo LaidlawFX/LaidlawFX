@@ -8,7 +8,7 @@ import os
 import sys
 import random
 import subprocess
-import exceptions
+#import exceptions - Moved to bultin in Python 3
 
 # =============================================================================
 # FUNCTIONS
@@ -22,7 +22,7 @@ import exceptions
 # -----------------------------------------------------------------------------
 
 def startup_check():
-    print "Running : pythonrc.py"
+    print("Running : pythonrc.py")
 if hou.getenv('HOUDINI_ADMIN'): 
     startup_check()
 
@@ -53,9 +53,9 @@ def houVer():
         houType = "Houdini Engine"
         addedWarning = 0        
 
-    print "Launching " + houType + " Version: " + hou.applicationVersionString()
+    print("Launching " + houType + " Version: " + hou.applicationVersionString())
     if addedWarning == 1 :
-        print "Warning: Dynamics not accessible in this version."
+        print("Warning: Dynamics not accessible in this version.")
     
 houVer()
 
@@ -73,7 +73,7 @@ def houSplashScreen():
 
     #Runs the SplashScreen Code
     if os.path.isfile(splash_path) :
-        #print "Updating Splash Screen Variable. You can change this in the +343 Menu."
+        #print("Updating Splash Screen Variable. You can change this in the +343 Menu.")
         pipe = subprocess.Popen(['setx', 'HOUDINI_SPLASH_FILE', splash_path], shell=False)
         #pipe = subprocess.Popen(['setx', 'HOUDINI_SPLASH_MESSAGE', 'Message 1 //n Message 2'], shell=False)
 
@@ -82,4 +82,4 @@ houSplashScreen()
 # =============================================================================
 # END
 # =============================================================================
-# print " "
+# print(" ")

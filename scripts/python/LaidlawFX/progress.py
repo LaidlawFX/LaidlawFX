@@ -73,7 +73,7 @@ def percent(node):
     #Percentage
     per     = int(float(frame_cur)/float(frame_inc))/float(frame_total)
     p       = int(10000 * per )/100
-    #Print Message
+
     
     pc      = 'Frame '+str(frame).zfill(padlen)+' ('+str(frame_cur).zfill(padlen)+' of '+str(frame_total).zfill(padlen)+', '+str(p).zfill(2)+'%) - '+date+ ' from: ' + str(node.path())
      

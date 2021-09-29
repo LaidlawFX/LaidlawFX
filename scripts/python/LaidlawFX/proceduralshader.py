@@ -33,21 +33,21 @@ def set_path(node):
         eT                = node.evalParm("eT")
         eVil              = node.evalParm("enableVerbosity")
         if eVil >= 3 :
-            print "Parent Node: " + pnodeName  
-            print "Parent Path: " + pnodePath             
+            print("Parent Node: " + pnodeName) 
+            print("Parent Path: " + pnodePath)             
  
         if eT == 0 :
             pnode.parm('shop_geometrypath').deleteAllKeyframes()
             pnode.parm('shop_geometrypath').set(shaderPathGeo)
             if eVil >= 1 :
-                print "Setting Procedural Path on " + pnodePath
-                print "Path Set to " + shaderPathGeo
+                print("Setting Procedural Path on " + pnodePath)
+                print("Path Set to " + shaderPathGeo)
         elif eT == 2 :
             pnode.parm('shop_geometrypath').deleteAllKeyframes()
             pnode.parm('shop_geometrypath').set(shaderPathAlembic)        
             if eVil >= 1 :
-                print "Setting Procedural Path on " + pnodePath
-                print "Path Set to " + shaderPathAlembic          
+                print("Setting Procedural Path on " + pnodePath)
+                print("Path Set to " + shaderPathAlembic)        
     except (KeyboardInterrupt, SystemExit):
         print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
         return

@@ -10,11 +10,12 @@ using UnityEngine;
 using Directory = System.IO.Directory;
 
 internal sealed class VAT_AssetImporter : AssetPostprocessor {
-    private static readonly string _basePath = "Assets";
+    private static readonly string _basePath = "Assets/VAT";
     private static string _baseString = "_mesh_vat";
-    private static string _assetName;
-    private static string _shaderName;
-    private static string _materialName;   
+    private static string _assetName = "default";
+    private static string _shaderName = "LaidlawFX/Default";
+    private static string _materialName = "default_mat_vat.mat";   
+
     private static string MeshPath   
     {
         get
@@ -141,7 +142,9 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
                 // Model - Meshes
                 importer.meshCompression    = ModelImporterMeshCompression.Off;
                 importer.isReadable         = false;
-                importer.optimizeMesh       = false;
+                //importer.optimizeMesh       = false;
+                importer.optimizeMeshPolygons = false;
+                importer.optimizeMeshVertices = false;
                 importer.addCollider        = false;
                 // Model - Geometry
                 importer.keepQuads          = false;
@@ -157,7 +160,8 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
                 importer.importAnimation    = false;
                 importer.importConstraints  = false;
                 // Materials            
-                importer.importMaterials    = true;
+                // importer.importMaterials    = true;
+                importer.materialImportMode = ModelImporterMaterialImportMode.ImportViaMaterialDescription;
                 importer.useSRGBMaterialColor = false;
                 importer.materialLocation   = ModelImporterMaterialLocation.InPrefab;
                 importer.materialName       = ModelImporterMaterialName.BasedOnMaterialName;
@@ -251,7 +255,7 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
         {
             Directory.CreateDirectory(MaterialsPath);
         }
-                
+
         //Check all the files in the directory for the main material
         foreach(var file in Directory.GetFiles(MaterialsPath, "*.mat", SearchOption.TopDirectoryOnly))
         {  
@@ -303,17 +307,22 @@ internal sealed class VAT_AssetImporter : AssetPostprocessor {
         AssetDatabase.RenameAsset(Path.Combine(MaterialsPath, tempName),_materialName);        
 
         //Grab the position texture if it exists
-        string texturePath = GetFilesPathNotMeta(TexturePath, _assetName + "_pos_vat"); 
- 
+        Debug.Log("Warning: Textures not being applied."); 
+        string texturePath = GetFilesPathNotMeta(TexturePath, _assetName + "_pos_vat").Replace("\\","/");
+        Debug.Log("this is my pos texture path : " +texturePath); 
         Texture2D posTex = (Texture2D)AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D));
+        int temp = posTex.GetInstanceID();
+        Debug.Log(temp);
  
-        if (posTex != null)
-        {
-            _mainMaterial.SetTexture("_posTex", posTex);
-        }
+        //if (posTex != null)
+        //{
+        //    _mainMaterial.SetTexture("_posTex", posTex);
+        //}
+        _mainMaterial.SetTexture("_posTex", posTex);
+
  
         //Grab the rotation map path if it exists
-        texturePath = GetFilesPathNotMeta(TexturePath, _assetName + "_rot_vat");
+        texturePath = GetFilesPathNotMeta(TexturePath, _assetName + "_rot_vat").Replace("\\","/");
  
         Texture2D rotTex = (Texture2D)AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D));
  

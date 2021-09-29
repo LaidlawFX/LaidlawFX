@@ -234,7 +234,7 @@ def execute_first(node):
         node.parm('f3').set(one)
         
     except (KeyboardInterrupt, SystemExit):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return 
 
 # -----------------------------------------------------------------------------

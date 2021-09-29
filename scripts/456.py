@@ -17,7 +17,7 @@ import hou
 # -----------------------------------------------------------------------------
 
 def startup_check():
-    print "Running : 456.py"
+    print("Running : 456.py")
 if hou.getenv('HOUDINI_ADMIN'): 
     startup_check()
 
@@ -36,15 +36,15 @@ def houDir():
     hou.hscript("prompt '`strcat(oppwf(), \" -> \")`'")
     hou.cd(currentDirectory)
 
-    #print "The current directory  is: " + currentDirectory
-    #print "The directory should be: " + commandPrompt
-    #print "The current node is: " + str(hou.node('.').path())
-    #print "test"
-    #print "The updated directory  is: " + updatedDirectory
+    #print("The current directory  is: " + currentDirectory)
+    #print("The directory should be: " + commandPrompt)
+    #print("The current node is: " + str(hou.node('.').path()))
+    #print("test")
+    #print("The updated directory  is: " + updatedDirectory)
 houDir()
 
 
 # =============================================================================
 # END
 # =============================================================================
-# print " "
+# print(" ")

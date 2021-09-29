@@ -220,7 +220,7 @@ def hq_job_name(node):
     global hipname
     process_node = oppath.node_input(node)
 
-    #print process_node.path()
+
 
     filelist    =['Asset : ',asset(process_node), ' Component : ',component(process_node), ' Hipname : ',hipname, ' Submitted : ',datetime.datetime.today().strftime('%Y-%m-%d %H:%M')]    
     job_name    = ''.join(filelist)  

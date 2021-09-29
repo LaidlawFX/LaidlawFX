@@ -79,7 +79,7 @@ def update(node):
             history_dir     = node.evalParm('history_dir' +str(i))      
             if history_lock == 0 and history_dir != "" :
                 hlcheck += 1
-        #print hlcheck
+
         if hlcheck == hl :
             node.parm('history_list').deleteAllKeyframes()
             node.parm('history_list').set(hl+1)
@@ -115,7 +115,7 @@ def update(node):
                     break                
     
     except (KeyboardInterrupt, SystemExit):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return                                    
            
 # -----------------------------------------------------------------------------
@@ -140,7 +140,7 @@ def clear(node):
                 node.parm('historydir'+str(i)).set('')               
 
     except (KeyboardInterrupt, SystemExit):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return
 
 
@@ -195,7 +195,7 @@ def delete(node):
         log.node(node, 1, "Finished deleting unlocked history") 
 
     except (KeyboardInterrupt, SystemExit):
-        print "Interrupt requested of "+function+" for "+nodePath+"...exiting"
+        print("Interrupt requested of "+function+" for "+nodePath+"...exiting")
         return 
 
 # -----------------------------------------------------------------------------
@@ -212,7 +212,7 @@ def remove(node, parm):
         try:
             shutil.rmtree(path)
         except:
-            print "Directory has been pre-cleared."
+            print("Directory has been pre-cleared.")
         
     node.parm(parm.replace('deleteHistory','historydir')).deleteAllKeyframes()
     node.parm(parm.replace('deleteHistory','historydir')).set('')             
